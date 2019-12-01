@@ -18,6 +18,7 @@
 			.SQLOnline_menubar{float:left;width:100%;height:40px;background-color:#F2F2F2;font-family:Arial;font-size:14px;font-weight:bold;line-height:14px;color:white;border-bottom:thin solid #D3D3D3}
 			.SQLOnline_holder{float:left;padding-top:3px;padding-bottom:3px;margin:0}
 			.SQLOnline_separator{float:left;border-left:thin solid #D3D3D3;margin-left:5px;height:45px;width:1px}
+			.SQLOnline_buttonHidden{display:none}
 			.SQLOnline_button_new_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAJ5JREFUOI3t06EKQjEUxvEfIjbxAeRGwccwGm4xGEwGH8JXMQlmQYtiMwi+g8EXMBuMGhx4GcpcM/iHw86273wb44wnO9wTccFIRD2MHUxwiAWBfThkjgYWseCM/ofi6n6JG8bxDb5lgyGWuGKVYzBAN+RHTHMMZuihHeYtNKuC1BvElDhBLaPoLX+DXzCoNlLh1WkpinhhK/2d41jDA8osKMtPNyUKAAAAAElFTkSuQmCC");background-repeat:no-repeat;background-position:center}
 			.SQLOnline_button_new_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_button_open_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAALRJREFUOI290D1qQkEUxfGfxEZEq9RapHBTbsBdWNmkCoJdWjeg4joUUkULEQnYWvpZZKZQ3ovzUHLgNMP9nzn38gR94huL4C90igScc9xKgUthOEtjrG7edhhgndIgz0uUHwk44y3CV0lBx1B9n7MaHLIaHNHD6x9gpmJA2+/lp+H3lFX2MaCLBn4SwegPGKKOWUF4gheoYlQQnqMWb/BeEN6gGeEyKqHOPZ3Cmn1sE+b/SRdKpHdvAOJqtAAAAABJRU5ErkJggg==");background-repeat:no-repeat;background-position:center}
@@ -55,6 +56,7 @@
 				</div>
 				<div class="SQLOnline_holder">
 					<div class="SQLOnline_button_open_enabled" id="buttonOpen"></div>
+					<input type="file" class="SQLOnline_buttonHidden" id="fileOpener" onChange="documentOpen(document.getElementById('fileOpener').files[0]);">
 				</div>
 				<div class="SQLOnline_holder">
 					<div class="SQLOnline_button_save_enabled" id="buttonSave"></div>
@@ -184,15 +186,22 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						values[i].unshift(i+1);
 						}
 
-					var tblRows = document.createElement("div");
-					tblRows.className = "SQLOnline_table";
+					// CREATING THE DIV THAT WILL CONTAING THE TABLE
+					var resultDiv = document.createElement("div");
+					resultDiv.className = "SQLOnline_table";
+
+					// CREATING THE TABLE
 					var tbl = document.createElement("table");
 					var html = "<thead>" + valconcat(columns, "th") + "</thead>";
-					var rows = values.map(function (v) {return valconcat(v, "td"); });
+					var rows = values.map(function (v){return valconcat(v, "td");});
 					html += "<tbody>" + valconcat(rows, "tr") + "</tbody>";
 					tbl.innerHTML = html;
-					tblRows.appendChild(tbl);
-					return tblRows;
+
+					// APPENDING THE TABLE TO THE DIV
+					resultDiv.appendChild(tbl);
+
+					// RETURNING THE DIV
+					return resultDiv;
 					}
 				}();
 
@@ -202,6 +211,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					{
 					var executeNewDocument = true;
 
+					// IF THE DOCUMENT IS DIRTY, A DISCARD CHANGES QUESTION WILL SHOW UP
 					if (editorDirty==true)
 						{
 						var question = confirm("Lose unsaved changes?");
@@ -211,15 +221,23 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 							}
 						}
 
+					// IF THE USER DISCARDS CHANGES OR CREATES A NEW DOCUMENT
 					if (executeNewDocument==true)
 						{
+						// CLEARING THE EDITOR CONTENT
 						editor.setValue("");
+
+						// CLEARING HISTORY
 						editor.clearHistory();
+
+						// FOCUSING THE EDITOR
 						editor.focus();
+
+						// CLEARING VALUES
 						editorDirty = false;
 						window.onbeforeunload = null;
 						document.getElementById("SQLOnline_status").innerHTML = "";
-						document.getElementById("output").innerHTML = "";
+						document.getElementById("SQLOnline_output").innerHTML = "";
 						}
 					}
 					catch(err)
@@ -227,8 +245,63 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				}
 
-			function documentOpen()
+			function documentOpen(file)
 				{
+				try
+					{
+					var executeOpenDocument = true;
+
+					// IF THE DOCUMENT IS DIRTY, A DISCARD CHANGES QUESTION WILL SHOW UP
+					if (editorDirty==true)
+						{
+						executeOpenDocument = confirm("Lose unsaved changes?");
+						}
+
+					// IF THE USER DISCARDS CHANGES OR OPENS A DOCUMENT
+					if (executeOpenDocument == true)
+						{
+						// CREATING THE FILEREADER
+						var filereader = new FileReader();
+						filereader.file_name = file.name;
+
+						// SETTING THE FILE NAME
+						STRING_FILENAME = file.name;
+
+						// CHECKING THE FILE EXTENSION
+						filereader.onload = function()
+							{
+							// GETTING THE FILE CONTENT
+							var content = this.result;
+
+							// SETTING THE FILE CONTENT INTO THE EDITOR
+							editor.setValue(content);
+
+							// CLEARING HISTORY
+							editor.clearHistory();
+
+							// FOCUSING THE EDITOR
+							editor.focus();
+
+							// CLEARING VALUES
+							editorDirty = false;
+							window.onbeforeunload = null;
+							document.getElementById("SQLOnline_status").innerHTML = "";
+							document.getElementById("SQLOnline_output").innerHTML = "";
+
+							// CLEARING THE SELECTED FILE VALUE
+							document.getElementById("fileOpener").value = null;
+							};
+
+						// READING THE FILE
+						filereader.readAsText(file,"ISO-8859-1");
+						}
+
+					// CLEARING THE SELECTED FILE VALUE
+					document.getElementById("fileOpener").value = null;
+					}
+					catch(err)
+					{
+					}
 				}
 
 			function documentSave()
@@ -287,8 +360,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			// PERFORMANCE MEASUREMENT FUNCTIONS
 			var tictime;
-			if (!window.performance || !performance.now) {window.performance = {now:Date.now } }
-			function tic() {tictime = performance.now() }
+			if(!window.performance||!performance.now){window.performance={now:Date.now}}
+			function tic(){tictime = performance.now()}
 			function toc(msg)
 				{
 				var dt = performance.now() - tictime;
@@ -322,7 +395,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			window.onload = function()
 				{
 				document.getElementById("buttonNew").addEventListener("click",function(event){documentNew()});
-				document.getElementById("buttonOpen").addEventListener("click",function(event){documentOpen()});
+				document.getElementById("buttonOpen").addEventListener("click",function(event){document.getElementById("fileOpener").click();});
 				document.getElementById("buttonSave").addEventListener("click",function(event){documentSave()});
 				document.getElementById("buttonUndo").addEventListener("click",function(event){documentUndo()});
 				document.getElementById("buttonRedo").addEventListener("click",function(event){documentRedo()});
