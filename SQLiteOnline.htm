@@ -266,14 +266,7 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				else if (msg==STRING_DISPLAYING)
 					{
 					document.getElementById("part2").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + dt + " ms"
-
-					// CHECKING IF MOBILE
-					var w = window.innerWidth;
-					var h = window.innerHeight;
-					if(window.innerHeight < window.innerWidth)
-						{
-						editor.focus();
-						}
+					editor.focus();
 					}
 				}
 
