@@ -337,7 +337,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					var dt = new Date().getTime() - initialTime;
 
 					// UPDATING THE LABEL
-					document.getElementById("SQLOnline_status").innerHTML =  "Query executed successfully in " + Math.floor(dt) + " ms."
+					document.getElementById("SQLOnline_status").innerHTML = "Query executed successfully in " + Math.floor(dt) + " ms."
 
 					// LOOPING THE RESULT AND CREATING A TABLE FOR EACH CASE
 					for (var i = 0; i < results.length; i++)
@@ -347,7 +347,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 
 				// EXECUTING SQL COMMANDS
-				worker.postMessage({action:"exec",sql:editor.getValue() + ";"});
+				worker.postMessage({action:"exec",sql:editor.getValue()+";"});
 				}
 
 			function SQLError(e)
