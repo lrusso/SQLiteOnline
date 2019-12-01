@@ -261,17 +261,17 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				var dt = performance.now() - tictime;
 				if (msg==STRING_EXECUTING)
 					{
-					document.getElementById("part1").innerHTML = STRING_EXECUTING + ": " + dt + " ms"
+					document.getElementById("part1").innerHTML = STRING_EXECUTING + ": " + Math.floor(dt) + " ms"
 					}
 				else if (msg==STRING_DISPLAYING)
 					{
 					if(window.innerHeight > window.innerWidth)
 						{
-						document.getElementById("part2").innerHTML = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + dt + " ms"
+						document.getElementById("part2").innerHTML = "<br/>" + STRING_DISPLAYING + ": " + Math.floor(dt) + " ms"
 						}
 						else
 						{
-						document.getElementById("part2").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + dt + " ms"
+						document.getElementById("part2").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + Math.floor(dt) + " ms"
 						}
 					editor.focus();
 					}
