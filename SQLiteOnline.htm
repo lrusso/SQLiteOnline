@@ -17,7 +17,7 @@
 			.SQLOnline_Container{width:100%}
 			.SQLOnline_MenuBar{float:left;width:100%;height:40px;background-color:#F2F2F2;font-family:Arial;font-size:14px;font-weight:bold;line-height:14px;color:white;border-bottom:thin solid #D3D3D3}
 			.SQLOnline_holder{float:left;padding-top:3px;padding-bottom:3px;margin:0}
-			.SQLOnline_separator{float:left;border-left:thin solid #D3D3D3;margin-left:5px;height:100px;width:1px}
+			.SQLOnline_separator{float:left;border-left:thin solid #D3D3D3;margin-left:5px;height:45px;width:1px}
 			.SQLOnline_button_new_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAJ5JREFUOI3t06EKQjEUxvEfIjbxAeRGwccwGm4xGEwGH8JXMQlmQYtiMwi+g8EXMBuMGhx4GcpcM/iHw86273wb44wnO9wTccFIRD2MHUxwiAWBfThkjgYWseCM/ofi6n6JG8bxDb5lgyGWuGKVYzBAN+RHTHMMZuihHeYtNKuC1BvElDhBLaPoLX+DXzCoNlLh1WkpinhhK/2d41jDA8osKMtPNyUKAAAAAElFTkSuQmCC");background-repeat:no-repeat;background-position:center}
 			.SQLOnline_button_new_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_button_open_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAALRJREFUOI290D1qQkEUxfGfxEZEq9RapHBTbsBdWNmkCoJdWjeg4joUUkULEQnYWvpZZKZQ3ovzUHLgNMP9nzn38gR94huL4C90igScc9xKgUthOEtjrG7edhhgndIgz0uUHwk44y3CV0lBx1B9n7MaHLIaHNHD6x9gpmJA2+/lp+H3lFX2MaCLBn4SwegPGKKOWUF4gheoYlQQnqMWb/BeEN6gGeEyKqHOPZ3Cmn1sE+b/SRdKpHdvAOJqtAAAAABJRU5ErkJggg==");background-repeat:no-repeat;background-position:center}
@@ -36,6 +36,7 @@
 			.SQLOnline_Result{float:left;width:100%;height:30px;background-color:#3a76b1;font-family:Arial;font-size:14px;font-weight:bold;line-height:30px;margin-bottom:5px;color:white;border-bottom:thin solid silver;display:none}
 			.SQLOnline_ResultValue{margin-left:10px;-webkit-user-select:none;-moz-user-select:none;user-select:none}
 			.SQLOnline_Table{font-family:Arial;font-size:13px;line-height:2.3;color:white;text-align:left;font-weight:bold;margin-left:10px;}
+
 			table{width:auto;border:thin solid black;border-collapse:collapse;margin-bottom:10px;background-color:white;font-family:Arial;font-size:14px}
 			th,td{border:thin solid black;padding:10px}
 			th{background-color:#3a76b1;color:white}
@@ -135,10 +136,8 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				}
 
 			// MAIN CODE
-			var execBtn = document.getElementById("execute");
 			var outputElm = document.getElementById("output");
 			var errorElm = document.getElementById("error");
-			var commandsElm = document.getElementById("commands");
 
 			// START THE WORKER IN WHICH SQL.JS WILL RUN
 			var worker = new Worker("SQLiteOnline.js");
@@ -215,15 +214,63 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				}();
 
-			// EXECUTE THE COMMANDS WHEN THE BUTTON IS CLICKED
-			function execEditorContents()
+			function documentNew()
 				{
-				document.getElementsByClassName("SQLOnline_Result")[0].style.display = "block";
-				noerror()
-				execute(editor.getValue() + ";");
+				try
+					{
+					editor.setValue("");
+					editor.clearHistory();
+					editor.focus();
+					}
+					catch(err)
+					{
+					}
 				}
 
-			document.getElementById("buttonExecute").addEventListener("click", execEditorContents, true);
+			function documentOpen()
+				{
+				}
+
+			function documentSave()
+				{
+
+				}
+
+			function documentUndo()
+				{
+				try
+					{
+					editor.undo();
+					editor.focus();
+					}
+					catch(err)
+					{
+					}
+				}
+
+			function documentRedo()
+				{
+				try
+					{
+					editor.redo();
+					editor.focus();
+					}
+					catch(err)
+					{
+					}
+				}
+
+			function documentSearch()
+				{
+
+				}
+
+			function SQLExecute()
+				{
+				document.getElementsByClassName("SQLOnline_Result")[0].style.display = "block";
+				noerror();
+				execute(editor.getValue() + ";");
+				}
 
 			// PERFORMANCE MEASUREMENT FUNCTIONS
 			var tictime;
@@ -251,7 +298,7 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				}
 
 			// ADD SYNTAX HIGHLIHJTING TO THE TEXTAREA
-			var editor = CodeMirror.fromTextArea(commandsElm,
+			var editor = CodeMirror.fromTextArea(document.getElementById("commands"),
 				{
 				mode: "text/x-mysql",
 				viewportMargin: Infinity,
@@ -261,6 +308,17 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				matchBrackets: true,
 				autofocus: true,
 				});
+
+			window.onload = function()
+				{
+				document.getElementById("buttonNew").addEventListener("click",function(event){documentNew()});
+				document.getElementById("buttonOpen").addEventListener("click",function(event){documentOpen()});
+				document.getElementById("buttonSave").addEventListener("click",function(event){documentSave()});
+				document.getElementById("buttonUndo").addEventListener("click",function(event){documentUndo()});
+				document.getElementById("buttonRedo").addEventListener("click",function(event){documentRedo()});
+				document.getElementById("buttonSearch").addEventListener("click",function(event){documentSearch()});
+				document.getElementById("buttonExecute").addEventListener("click",function(event){SQLExecute()});
+				}
 		</script>
 	</body>
 </html>
