@@ -288,6 +288,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				if (msg=="executing")
 					{
 					document.getElementById("SQLOnline_status").innerHTML =  "Query executed successfully in " + Math.floor(dt) + " ms."
+					editor.focus();
 					}
 				}
 
