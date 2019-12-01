@@ -265,14 +265,7 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				else if (msg==STRING_DISPLAYING)
 					{
-					if(window.innerHeight > window.innerWidth)
-						{
-						document.getElementById("part2").innerHTML = "<br/>&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + Math.floor(dt) + " ms"
-						}
-						else
-						{
-						document.getElementById("part2").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + Math.floor(dt) + " ms"
-						}
+					document.getElementById("part2").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + Math.floor(dt) + " ms"
 					editor.focus();
 					}
 				}
