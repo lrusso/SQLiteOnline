@@ -10,12 +10,12 @@
 		<meta name="apple-mobile-web-app-capable" content="yes"/>
 		<meta name="viewport" content="width=400, initial-scale=1.0, minimum-scale=1.0, user-scalable=no"/>
 		<style>
-			html,body{padding:0;margin:0;background:gray}
+			html,body{padding:0;margin:0;background:white}
 
 			.error{color:red;transition:.5s;overflow:hidden}
 
-			.SQLOnline_Container{width:100%}
-			.SQLOnline_MenuBar{float:left;width:100%;height:40px;background-color:#F2F2F2;font-family:Arial;font-size:14px;font-weight:bold;line-height:14px;color:white;border-bottom:thin solid #D3D3D3}
+			.SQLOnline_container{width:100%}
+			.SQLOnline_menubar{float:left;width:100%;height:40px;background-color:#F2F2F2;font-family:Arial;font-size:14px;font-weight:bold;line-height:14px;color:white;border-bottom:thin solid #D3D3D3}
 			.SQLOnline_holder{float:left;padding-top:3px;padding-bottom:3px;margin:0}
 			.SQLOnline_separator{float:left;border-left:thin solid #D3D3D3;margin-left:5px;height:45px;width:1px}
 			.SQLOnline_button_new_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAJ5JREFUOI3t06EKQjEUxvEfIjbxAeRGwccwGm4xGEwGH8JXMQlmQYtiMwi+g8EXMBuMGhx4GcpcM/iHw86273wb44wnO9wTccFIRD2MHUxwiAWBfThkjgYWseCM/ofi6n6JG8bxDb5lgyGWuGKVYzBAN+RHTHMMZuihHeYtNKuC1BvElDhBLaPoLX+DXzCoNlLh1WkpinhhK/2d41jDA8osKMtPNyUKAAAAAElFTkSuQmCC");background-repeat:no-repeat;background-position:center}
@@ -30,11 +30,14 @@
 			.SQLOnline_button_redo_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_button_execute_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwBBiABx0YhbgAAAIdJREFUOMu90iEKAnEUxOEPDUaxCrLFsIfwBgbxDt7DM1j2DgajzaIX8AraTDab8LfsgnXfQwemvfnBG4YfaZgJN3hgGQWcUFrvMMoACq6oM4CCFzYZQOc9xhlAwQ3T7ngQKLnCPAp4Yo1L5IUzZpES39j2Wec34I5F35KObfiASWTKNVb+pQ+KHjTRA0iZJgAAAABJRU5ErkJggg==");background-repeat:no-repeat;background-position:center}
 			.SQLOnline_button_execute_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
-			.SQLOnline_Body{float:left;width:100%;border-bottom:thin solid #D3D3D3}
-			.SQLOnline_Result{float:left;width:100%;height:auto;background-color:#3a76b1;font-family:Arial;font-size:14px;font-weight:bold;line-height:30px;margin-bottom:5px;color:white;border-bottom:thin solid silver;display:none}
-			.SQLOnline_ResultValue{margin-left:10px;-webkit-user-select:none;-moz-user-select:none;user-select:none}
-			.SQLOnline_Output{float:left;width:100%}
-			.SQLOnline_Table{font-family:Arial;font-size:13px;line-height:2.3;color:white;text-align:left;font-weight:bold;margin-left:10px}
+			.SQLOnline_body{float:left;width:100%;border-bottom:thin solid #D3D3D3}
+			.SQLOnline_results_container{float:left;background-color:#F2F2F2;width:100%;padding-top:10px}
+			.SQLOnline_results_title{float:left;background-color:white;border-right:thin solid #D3D3D3;border-top:thin solid #D3D3D3}
+			.SQLOnline_results_title_icon{float:left;width:20px;height:30px;padding-left:10px;background-position:center center;background-repeat:no-repeat;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwBEgctNHT0RAAAAClJREFUOMtjYKAQMELp/+TqZaLUBRQbwIDDC0TzmQY8EEe9MJi8MIQBAP5cEAN8bxoTAAAAAElFTkSuQmCC")}
+			.SQLOnline_results_title_value{float:left;height:30px;font-family:Arial;font-size:14px;line-height:2;padding-right:15px;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+			.SQLOnline_results_wrapper{float:left;width:100%;border-top:thin solid #D3D3D3;background-color:white;font-family:Arial;font-size:14px}
+			.SQLOnline_results_status{float:left;width:95%;line-height:3;padding-left:10px;}
+			.SQLOnline_table{font-family:Arial;font-size:13px;line-height:2.3;color:white;text-align:left;font-weight:bold;margin-left:10px}
 
 			table{width:auto;border:thin solid black;border-collapse:collapse;margin-bottom:10px;background-color:white;font-family:Arial;font-size:14px}
 			th,td{border:thin solid black;padding:10px}
@@ -45,8 +48,8 @@
 		</style>
 	</head>
 	<body>
-		<div class="SQLOnline_Container">
-			<div class="SQLOnline_MenuBar">
+		<div class="SQLOnline_container">
+			<div class="SQLOnline_menubar">
 				<div class="SQLOnline_holder">
 					<div class="SQLOnline_button_new_enabled" id="buttonNew"></div>
 				</div>
@@ -69,7 +72,7 @@
 				</div>
 				<div class="SQLOnline_separator"></div>
 			</div>
-			<div class="SQLOnline_Body">
+			<div class="SQLOnline_body">
 				<textarea id="commands">DROP TABLE IF EXISTS employees;
 
 CREATE TABLE employees( id          integer,  name    text,
@@ -95,13 +98,17 @@ INSERT INTO employees VALUES (14, 'ROOSEVELT',  'CPA',         9, '1995-10-12', 
 SELECT designation, COUNT(*) AS nbr, (AVG(salary)) AS avg_salary FROM employees GROUP BY designation ORDER BY avg_salary DESC;
 SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			</div>
-			<div class="SQLOnline_Result">
-				<span class="SQLOnline_ResultValue"><span id="part1"></span><span id="part2"></span></span>
-			</div>
 		</div>
-		<div class="SQLOnline_Output">
-			<div id="error" class="error"></div>
-			<div id="output"></div>
+		<div class="SQLOnline_results_container">
+			<div class="SQLOnline_results_title">
+				<div class="SQLOnline_results_title_icon"></div>
+				<div class="SQLOnline_results_title_value">Results</div>
+			</div>
+			<div class="SQLOnline_results_wrapper">
+				<div id="error" class="error"></div>
+				<span class="SQLOnline_results_status" id="SQLOnline_status"></span>
+				<div id="SQLOnline_output"></div>
+			</div>
 		</div>
 
 		<script>
@@ -113,28 +120,6 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			// CodeMirror - matchbrackets.min.js
 			!function(t){"object"==typeof exports&&"object"==typeof module?t(require("../../lib/codemirror")):"function"==typeof define&&define.amd?define(["../../lib/codemirror"],t):t(CodeMirror)}(function(t){var e=/MSIE \d/.test(navigator.userAgent)&&(null==document.documentMode||document.documentMode<8),n=t.Pos,r={"(":")>",")":"(<","[":"]>","]":"[<","{":"}>","}":"{<","<":">>",">":"<<"};function i(t){return t&&t.bracketRegex||/[(){}[\]]/}function a(t,e,a){var o=t.getLineHandle(e.line),l=e.ch-1,h=a&&a.afterCursor;null==h&&(h=/(^| )cm-fat-cursor($| )/.test(t.getWrapperElement().className));var s=i(a),u=!h&&l>=0&&s.test(o.text.charAt(l))&&r[o.text.charAt(l)]||s.test(o.text.charAt(l+1))&&r[o.text.charAt(++l)];if(!u)return null;var f=">"==u.charAt(1)?1:-1;if(a&&a.strict&&f>0!=(l==e.ch))return null;var m=t.getTokenTypeAt(n(e.line,l+1)),g=c(t,n(e.line,l+(f>0?1:0)),f,m||null,a);return null==g?null:{from:n(e.line,l),to:g&&g.pos,match:g&&g.ch==u.charAt(0),forward:f>0}}function c(t,e,a,c,o){for(var l=o&&o.maxScanLineLength||1e4,h=o&&o.maxScanLines||1e3,s=[],u=i(o),f=a>0?Math.min(e.line+h,t.lastLine()+1):Math.max(t.firstLine()-1,e.line-h),m=e.line;m!=f;m+=a){var g=t.getLine(m);if(g){var d=a>0?0:g.length-1,k=a>0?g.length:-1;if(!(g.length>l))for(m==e.line&&(d=e.ch-(a<0?1:0));d!=k;d+=a){var p=g.charAt(d);if(u.test(p)&&(void 0===c||t.getTokenTypeAt(n(m,d+1))==c)){var v=r[p];if(v&&">"==v.charAt(1)==a>0)s.push(p);else{if(!s.length)return{pos:n(m,d),ch:p};s.pop()}}}}}return m-a!=(a>0?t.lastLine():t.firstLine())&&null}function o(t,r,i){for(var c=t.state.matchBrackets.maxHighlightLineLength||1e3,o=[],l=t.listSelections(),h=0;h<l.length;h++){var s=l[h].empty()&&a(t,l[h].head,i);if(s&&t.getLine(s.from.line).length<=c){var u=s.match?"CodeMirror-matchingbracket":"CodeMirror-nonmatchingbracket";o.push(t.markText(s.from,n(s.from.line,s.from.ch+1),{className:u})),s.to&&t.getLine(s.to.line).length<=c&&o.push(t.markText(s.to,n(s.to.line,s.to.ch+1),{className:u}))}}if(o.length){e&&t.state.focused&&t.focus();var f=function(){t.operation(function(){for(var t=0;t<o.length;t++)o[t].clear()})};if(!r)return f;setTimeout(f,800)}}function l(t){t.operation(function(){t.state.matchBrackets.currentlyHighlighted&&(t.state.matchBrackets.currentlyHighlighted(),t.state.matchBrackets.currentlyHighlighted=null),t.state.matchBrackets.currentlyHighlighted=o(t,!1,t.state.matchBrackets)})}t.defineOption("matchBrackets",!1,function(e,n,r){r&&r!=t.Init&&(e.off("cursorActivity",l),e.state.matchBrackets&&e.state.matchBrackets.currentlyHighlighted&&(e.state.matchBrackets.currentlyHighlighted(),e.state.matchBrackets.currentlyHighlighted=null)),n&&(e.state.matchBrackets="object"==typeof n?n:{},e.on("cursorActivity",l))}),t.defineExtension("matchBrackets",function(){o(this,!0)}),t.defineExtension("findMatchingBracket",function(t,e,n){return(n||"boolean"==typeof e)&&(n?(n.strict=e,e=n):e=e?{strict:!0}:null),a(this,t,e)}),t.defineExtension("scanForBracket",function(t,e,n,r){return c(this,t,e,n,r)})});
-
-			// LANGUAGE CODE
-			var userLanguage = window.navigator.userLanguage || window.navigator.language;
-			var STRING_LOSECHANGES = "";
-			var STRING_EXECUTING = "";
-			var STRING_DISPLAYING = "";
-			var STRING_ROWSFOUND = "";
-
-			if (userLanguage.substring(0,2)=="es")
-				{
-				STRING_LOSECHANGES = String.fromCharCode(191) + "Perder cambios no guardados?";
-				STRING_EXECUTING = "Ejecutando SQL";
-				STRING_DISPLAYING = "Mostrando resultados";
-				STRING_ROWSFOUND = " FILAS ENCONTRADAS";
-				}
-				else
-				{
-				STRING_LOSECHANGES = "Lose unsaved changes?";
-				STRING_EXECUTING = "Executing SQL";
-				STRING_DISPLAYING = "Displaying results";
-				STRING_ROWSFOUND = " ROWS FOUND";
-				}
 
 			var worker = new Worker("SQLiteOnline.js");
 			worker.onerror = error;
@@ -162,20 +147,21 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				worker.onmessage = function (event)
 					{
 					var results = event.data.results;
-					toc(STRING_EXECUTING);
+					toc("executing");
 
 					tic();
 
-					document.getElementById("output").innerHTML = "";
+					document.getElementById("SQLOnline_output").innerHTML = "";
 					for (var i = 0; i < results.length; i++)
 						{
-						document.getElementById("output").appendChild(tableCreate(results[i].columns, results[i].values));
+						document.getElementById("SQLOnline_output").appendChild(tableCreate(results[i].columns, results[i].values));
 						}
-					toc(STRING_DISPLAYING);
+					toc("displaying");
 					}
 
 				worker.postMessage({ action: "exec", sql: commands });
-				//document.getElementById("output").textContent = "Fetching results...";
+				document.getElementById("SQLOnline_status").innerHTML = "Fetching results...";
+				document.getElementById("SQLOnline_output").innerHTML = "Fetching results...";
 				}
 
 			// CREATE AN HTML TABLE
@@ -192,13 +178,12 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					{
 					var counter = 0;
 					var tblRows = document.createElement("div");
-					tblRows.className = "SQLOnline_Table";
+					tblRows.className = "SQLOnline_table";
 					var tbl = document.createElement("table");
 					var html = "<thead>" + valconcat(columns, "th") + "</thead>";
 					var rows = values.map(function (v) { counter = counter + 1; return valconcat(v, "td"); });
 					html += "<tbody>" + valconcat(rows, "tr") + "</tbody>";
 					tbl.innerHTML = html;
-					tblRows.innerHTML = counter + STRING_ROWSFOUND;
 					tblRows.appendChild(tbl);
 					return tblRows;
 					}
@@ -212,7 +197,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 					if (editorDirty==true)
 						{
-						var question = confirm(STRING_LOSECHANGES);
+						var question = confirm("Lose unsaved changes?");
 						if (question == false)
 							{
 							executeNewDocument = false;
@@ -226,6 +211,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						editor.focus();
 						editorDirty = false;
 						window.onbeforeunload = null;
+						document.getElementById("SQLOnline_status").innerHTML = "";
+						document.getElementById("output").innerHTML = "";
 						}
 					}
 					catch(err)
@@ -286,9 +273,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			function SQLExecute()
 				{
-				document.getElementById("part1").innerHTML = "";
-				document.getElementById("part2").innerHTML = "";
-				document.getElementsByClassName("SQLOnline_Result")[0].style.display = "block";
+				document.getElementById("SQLOnline_status").innerHTML = "";
 				noerror();
 				execute(editor.getValue() + ";");
 				}
@@ -300,14 +285,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			function toc(msg)
 				{
 				var dt = performance.now() - tictime;
-				if (msg==STRING_EXECUTING)
+				if (msg=="executing")
 					{
-					document.getElementById("part1").innerHTML = STRING_EXECUTING + ": " + Math.floor(dt) + " ms"
-					}
-				else if (msg==STRING_DISPLAYING)
-					{
-					document.getElementById("part2").innerHTML = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + STRING_DISPLAYING + ": " + Math.floor(dt) + " ms"
-					editor.focus();
+					document.getElementById("SQLOnline_status").innerHTML =  "Query executed successfully in " + Math.floor(dt) + " ms."
 					}
 				}
 
