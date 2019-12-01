@@ -177,7 +177,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				return function (columns,values)
 					{
 					// ADDING EXTRA COLUMN FOR THE ROW COUNTER
-					columns.unshift(" ");
+					columns.unshift("&nbsp;");
 
 					// ADDING ROW COUNTER IN EACH ROW
 					for (var i=0;i<values.length;i++)
