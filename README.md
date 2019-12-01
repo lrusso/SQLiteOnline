@@ -1,6 +1,6 @@
 # SQLite Online
 
-SQLite Online using JavaScript with Emscripten.
+SQLite Online using HTML5 with Emscripten.
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/SQLiteOnline/master/SQLiteOnline.png)
 
