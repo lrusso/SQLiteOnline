@@ -92,8 +92,8 @@ INSERT INTO employees VALUES (12, 'WASHINGTON', 'ADMIN',       6, '1998-04-16', 
 INSERT INTO employees VALUES (13, 'MONROE',     'ENGINEER',   10, '2000-12-03', 30000, NULL, 2);
 INSERT INTO employees VALUES (14, 'ROOSEVELT',  'CPA',         9, '1995-10-12', 35000, NULL, 1);
 
-SELECT designation,COUNT(*) AS nbr, (AVG(salary)) AS avg_salary FROM employees GROUP BY designation ORDER BY avg_salary DESC;
-SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
+SELECT designation, COUNT(*) AS nbr, (AVG(salary)) AS avg_salary FROM employees GROUP BY designation ORDER BY avg_salary DESC;
+SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			</div>
 			<div class="SQLOnline_Result">
 				<span class="SQLOnline_ResultValue"><span id="part1"></span><span id="part2"></span></span>
