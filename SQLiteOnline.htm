@@ -159,9 +159,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					toc("displaying");
 					}
 
-				worker.postMessage({ action: "exec", sql: commands });
 				document.getElementById("SQLOnline_status").innerHTML = "Fetching results...";
 				document.getElementById("SQLOnline_output").innerHTML = "";
+				worker.postMessage({ action: "exec", sql: commands });
 				}
 
 			// CREATE AN HTML TABLE
