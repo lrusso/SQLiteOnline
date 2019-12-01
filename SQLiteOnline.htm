@@ -33,7 +33,8 @@
 			.SQLOnline_Body{float:left;width:100%;border-bottom:thin solid #D3D3D3}
 			.SQLOnline_Result{float:left;width:100%;height:auto;background-color:#3a76b1;font-family:Arial;font-size:14px;font-weight:bold;line-height:30px;margin-bottom:5px;color:white;border-bottom:thin solid silver;display:none}
 			.SQLOnline_ResultValue{margin-left:10px;-webkit-user-select:none;-moz-user-select:none;user-select:none}
-			.SQLOnline_Table{font-family:Arial;font-size:13px;line-height:2.3;color:white;text-align:left;font-weight:bold;margin-left:10px;}
+			.SQLOnline_Output{float:left;width:100%}
+			.SQLOnline_Table{font-family:Arial;font-size:13px;line-height:2.3;color:white;text-align:left;font-weight:bold;margin-left:10px}
 
 			table{width:auto;border:thin solid black;border-collapse:collapse;margin-bottom:10px;background-color:white;font-family:Arial;font-size:14px}
 			th,td{border:thin solid black;padding:10px}
@@ -98,7 +99,7 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				<span class="SQLOnline_ResultValue"><span id="part1"></span><span id="part2"></span></span>
 			</div>
 		</div>
-		<div style="float:left;width:100%">
+		<div class="SQLOnline_Output">
 			<div id="error" class="error"></div>
 			<div id="output"></div>
 		</div>
