@@ -129,33 +129,22 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				STRING_ROWSFOUND = " ROWS FOUND";
 				}
 
-			// MAIN CODE
-			var outputElm = document.getElementById("output");
-			var errorElm = document.getElementById("error");
-
-			// START THE WORKER IN WHICH SQL.JS WILL RUN
 			var worker = new Worker("SQLiteOnline.js");
 			worker.onerror = error;
 
 			// OPEN A DATABASE
 			worker.postMessage({ action:"open"});
 
-			// CONNECT TO THE HTML ELEMENT WE "PRINT" TO
-			function print(text)
-				{
-				outputElm.innerHTML = text.replace(/\n/g, "<br>");
-				}
-
 			function error(e)
 				{
 				console.log(e);
-				errorElm.style.height = "2em";
-				errorElm.textContent = e.message;
+				document.getElementById("error").style.height = "2em";
+				document.getElementById("error").textContent = e.message;
 				}
 
 			function noerror()
 				{
-				errorElm.style.height = "0";
+				document.getElementById("error").style.height = "0";
 				}
 
 			// RUN A COMMAND IN THE DATABASE
@@ -170,16 +159,16 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 
 					tic();
 
-					outputElm.innerHTML = "";
+					document.getElementById("output").innerHTML = "";
 					for (var i = 0; i < results.length; i++)
 						{
-						outputElm.appendChild(tableCreate(results[i].columns, results[i].values));
+						document.getElementById("output").appendChild(tableCreate(results[i].columns, results[i].values));
 						}
 					toc(STRING_DISPLAYING);
 					}
 
 				worker.postMessage({ action: "exec", sql: commands });
-				//outputElm.textContent = "Fetching results...";
+				//document.getElementById("output").textContent = "Fetching results...";
 				}
 
 			// CREATE AN HTML TABLE
@@ -254,13 +243,10 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				}
 
-			function documentSearch()
-				{
-
-				}
-
 			function SQLExecute()
 				{
+				document.getElementById("part1").innerHTML = "";
+				document.getElementById("part2").innerHTML = "";
 				document.getElementsByClassName("SQLOnline_Result")[0].style.display = "block";
 				noerror();
 				execute(editor.getValue() + ";");
@@ -291,7 +277,7 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				}
 
-			// ADD SYNTAX HIGHLIHJTING TO THE TEXTAREA
+			// STARTING THE CODE TEXT EDITOR
 			var editor = CodeMirror.fromTextArea(document.getElementById("commands"),
 				{
 				mode: "text/x-mysql",
@@ -301,6 +287,12 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				lineNumbers: true,
 				matchBrackets: true,
 				autofocus: true,
+				});
+
+			editor.on("change",function(cMirror)
+				{
+				// get value right from instance
+				console.log('dirty');
 				});
 
 			window.onload = function()
