@@ -1,7 +1,7 @@
-# SQL Online
+# SQLite Online
 
-SQL Online using JavaScript with Emscripten.
+SQLite Online using JavaScript with Emscripten.
 
 ## Web:
 
-https://lrusso.github.io/SQLOnline/SQLOnline.htm
+https://lrusso.github.io/SQLiteOnline/SQLiteOnline.htm
