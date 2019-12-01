@@ -344,6 +344,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						{
 						document.getElementById("SQLOnline_output").appendChild(tableCreate(results[i].columns,results[i].values));
 						}
+
+					// FOCUSING THE EDITOR
+					editor.focus();
 					}
 
 				// EXECUTING SQL COMMANDS
