@@ -1,6 +1,6 @@
 # SQL Online
 
-SQL Online using JavaScript with Emscripten
+SQL Online using JavaScript with Emscripten.
 
 ## Web:
 
