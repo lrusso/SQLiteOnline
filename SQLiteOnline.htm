@@ -116,18 +116,21 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			// LANGUAGE CODE
 			var userLanguage = window.navigator.userLanguage || window.navigator.language;
+			var STRING_LOSECHANGES = "";
 			var STRING_EXECUTING = "";
 			var STRING_DISPLAYING = "";
 			var STRING_ROWSFOUND = "";
 
 			if (userLanguage.substring(0,2)=="es")
 				{
+				STRING_LOSECHANGES = "&iquest;Perder cambios no guardados?";
 				STRING_EXECUTING = "Ejecutando SQL";
 				STRING_DISPLAYING = "Mostrando resultados";
 				STRING_ROWSFOUND = " FILAS ENCONTRADAS";
 				}
 				else
 				{
+				STRING_LOSECHANGES = "Lose unsaved changes?";
 				STRING_EXECUTING = "Executing SQL";
 				STRING_DISPLAYING = "Displaying results";
 				STRING_ROWSFOUND = " ROWS FOUND";
@@ -205,9 +208,24 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				{
 				try
 					{
-					editor.setValue("");
-					editor.clearHistory();
-					editor.focus();
+					var executeNewDocument = true;
+
+					if (editorDirty==true)
+						{
+						var question = confirm(STRING_LOSECHANGES);
+						if (question == false)
+							{
+							executeNewDocument = false;
+							}
+						}
+
+					if (executeNewDocument==true)
+						{
+						editor.setValue("");
+						editor.clearHistory();
+						editor.focus();
+						editorDirty = false;
+						}
 					}
 					catch(err)
 					{
@@ -286,10 +304,11 @@ SELECT name,hired_on FROM employees ORDER BY hired_on;</textarea>
 				autofocus: true,
 				});
 
+			var editorDirty = false;
+
 			editor.on("change",function(cMirror)
 				{
-				// get value right from instance
-				console.log('dirty');
+				editorDirty = true;
 				});
 
 			window.onload = function()
