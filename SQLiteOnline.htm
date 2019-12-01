@@ -123,7 +123,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			if (userLanguage.substring(0,2)=="es")
 				{
-				STRING_LOSECHANGES = "&iquest;Perder cambios no guardados?";
+				STRING_LOSECHANGES = String.fromCharCode(191) + "Perder cambios no guardados?";
 				STRING_EXECUTING = "Ejecutando SQL";
 				STRING_DISPLAYING = "Mostrando resultados";
 				STRING_ROWSFOUND = " FILAS ENCONTRADAS";
