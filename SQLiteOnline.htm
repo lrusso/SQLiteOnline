@@ -121,6 +121,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			// SETTING THE WORKER
 			var worker = new Worker("SQLiteOnline.js");
+
+			// SETTING THE FUNCTION THAT WILL BE EXECUTED FOR ANY SQLERROR
 			worker.onerror = SQLError;
 
 			// OPEN A DATABASE
@@ -269,10 +271,13 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				{
 				try
 					{
+					// SETTING THE BLOB VALUE
 					var blobValue = new Blob([editor.getValue()],{type:"text/plain"});
 
+					// SETTING THE FILENAME
 					var filename = "Script.sql";
 
+					// DOWNLOADING THE FILE
 					var link = document.createElement("a");
 					link.style.display = "none";
 					document.body.appendChild(link);
