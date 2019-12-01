@@ -225,6 +225,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						editor.clearHistory();
 						editor.focus();
 						editorDirty = false;
+						window.onbeforeunload = null;
 						}
 					}
 					catch(err)
@@ -252,6 +253,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					link.click();
 
 					editorDirty = false;
+					window.onbeforeunload = null;
 					}
 					catch(err)
 					{
@@ -326,6 +328,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			editor.on("change",function(cMirror)
 				{
 				editorDirty = true;
+				window.onbeforeunload = function(e){return "Dirty"};
 				});
 
 			window.onload = function()
