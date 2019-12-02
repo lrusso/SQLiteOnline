@@ -230,33 +230,43 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						// SETTING THE FILE NAME
 						STRING_FILENAME = file.name;
 
-						// CHECKING THE FILE EXTENSION
-						filereader.onload = function()
+						// CHECKING IF THE FILE HAS A SQL EXTENSION
+						var extension = file.name.split(".").pop().toLowerCase();
+						if (extension=="sql")
 							{
-							// GETTING THE FILE CONTENT
-							var content = this.result;
+							// CHECKING THE FILE EXTENSION
+							filereader.onload = function()
+								{
+								// GETTING THE FILE CONTENT
+								var content = this.result;
 
-							// SETTING THE FILE CONTENT INTO THE EDITOR
-							editor.setValue(content);
+								// SETTING THE FILE CONTENT INTO THE EDITOR
+								editor.setValue(content);
 
-							// CLEARING HISTORY
-							editor.clearHistory();
+								// CLEARING HISTORY
+								editor.clearHistory();
 
-							// FOCUSING THE EDITOR
+								// FOCUSING THE EDITOR
+								editor.focus();
+
+								// CLEARING VALUES
+								editorDirty = false;
+								window.onbeforeunload = null;
+								document.getElementById("SQLOnline_status").innerHTML = "";
+								document.getElementById("SQLOnline_output").innerHTML = "";
+
+								// CLEARING THE SELECTED FILE VALUE
+								document.getElementById("fileOpener").value = null;
+								};
+
+							// READING THE FILE
+							filereader.readAsText(file,"ISO-8859-1");
+							}
+							else
+							{
+							alert("ERROR: Please check that the file has a SQL extension and format.")
 							editor.focus();
-
-							// CLEARING VALUES
-							editorDirty = false;
-							window.onbeforeunload = null;
-							document.getElementById("SQLOnline_status").innerHTML = "";
-							document.getElementById("SQLOnline_output").innerHTML = "";
-
-							// CLEARING THE SELECTED FILE VALUE
-							document.getElementById("fileOpener").value = null;
-							};
-
-						// READING THE FILE
-						filereader.readAsText(file,"ISO-8859-1");
+							}
 						}
 
 					// CLEARING THE SELECTED FILE VALUE
