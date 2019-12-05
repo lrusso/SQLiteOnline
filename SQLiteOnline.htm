@@ -31,6 +31,8 @@
 			.SQLOnline_button_execute_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_button_tables_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:27px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwFAS8PLUuRdAAAAChJREFUOMtjYBhowAil/5Orl4lSFzBRyyv/yeUzDXggjnphMHlh4AAA7Z4QA4a4SGAAAAAASUVORK5CYII=");background-repeat:no-repeat;background-position:center}
 			.SQLOnline_button_tables_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
+			.SQLOnline_button_export_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAGlJREFUOI1jYKAQMOKR+0+MWiZKXTBqAI0MmMWAGYUMULFZxBjKzsDAcByqARkfg8oRBaQYGBieI2l+DhXDCWAKkYEVAwPDLyi2IqQemwEMDAwM6QwMDGnEWIjLAFwArp4FiwRJgOJ0AAApLx4H+OZ62AAAAABJRU5ErkJggg==");background-repeat:no-repeat;background-position:center}
+			.SQLOnline_button_export_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_body{float:left;width:100%;border-bottom:thin solid #D3D3D3}
 			.SQLOnline_results_container{float:left;background-color:#F2F2F2;width:100%;padding-top:10px}
 			.SQLOnline_results_title{float:left;background-color:white;border-right:thin solid #D3D3D3;border-top:thin solid #D3D3D3}
@@ -72,9 +74,11 @@
 				<div class="SQLOnline_holder">
 					<div class="SQLOnline_button_execute_enabled" id="buttonExecute"></div>
 				</div>
-				<div class="SQLOnline_separator"></div>
 				<div class="SQLOnline_holder">
 					<div class="SQLOnline_button_tables_enabled" id="buttonTables"></div>
+				</div>
+				<div class="SQLOnline_holder">
+					<div class="SQLOnline_button_export_enabled" id="buttonExport"></div>
 				</div>
 				<div class="SQLOnline_separator"></div>
 			</div>
@@ -418,6 +422,10 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				document.getElementById("buttonRedo").addEventListener("click",function(event){documentRedo()});
 				document.getElementById("buttonExecute").addEventListener("click",function(event){SQLExecute(null)});
 				document.getElementById("buttonTables").addEventListener("click",function(event){SQLExecute("SELECT * FROM sqlite_master;")});
+				document.getElementById("buttonExport").addEventListener("click",function(event)
+					{
+					alert('');
+					});
 				}
 		</script>
 	</body>
