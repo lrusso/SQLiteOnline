@@ -480,40 +480,53 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						// INSERTING THE 'CREATE TABLE' COMMAND FOR THE CURRENT TABLE, TO THE SCRIPT
 						finalResult = finalResult + "\n" + values[i][1] + ";\n";
 
-						// ADDING THE CURRENT TABLE NAME TO AN ARRAY,
-						// BECAUSE IS REQUIRED IN THE NEXT STAGE OF THIS EXPORTING PROCESS
+						// ADDING THE CURRENT TABLE NAME TO THE 'TABLES PENDING' ARRAY,
+						// BECAUSE THIS IS REQUIRED IN THE NEXT STAGE OF THIS EXPORTING PROCESS.
 						EXPORT_STATUS_TABLES_PENDING.push(values[i][0]);
 						}
 					}
 				else if (EXPORT_STATUS==EXPORT_STATUS_STAGE_2_INSERTING_ROWS)
 					{
+					// LOOPING THE RESULT (ROWS)
 					for (var i=0;i<values.length;i++)
 						{
+						// STARTING THE SQL COMMAND
 						finalResult = finalResult + "INSERT INTO " + EXPORT_STATUS_TABLES_PENDING[0] + " VALUES (";
 
+						// LOOPING THE ROW (FOR CELL VALUES)
 						for (var j=0;j<values[i].length;j++)
 							{
+							// ADDING A COMMA IF NECESSARY
 							if (j>0)
 								{
 								finalResult = finalResult + ", ";
 								}
+
+							// CHECKING IF THE CURRENT VALUE IS A STRING
 							if (typeof values[i][j] === "string" || values[i][j] instanceof String)
 								{
+								// ADDING THE CELL VALUE BETWEEN DOUBLE QUOTES
 								finalResult = finalResult + "\"" + values[i][j] + "\"";
 								}
 								else
 								{
+								// ADDING THE CELL VALUE
 								finalResult = finalResult + values[i][j];
 								}
 							}
 
+						// ENDING THE SQL COMMAND
 						finalResult = finalResult +  ");\n";
 						}
+
+					// REMOVING THE TABLE NAME FROM THE 'TABLES PENDING' ARRAY
 					EXPORT_STATUS_TABLES_PENDING.shift();
 					}
 
+				// ADDING A BREAKLINE
 				finalResult = finalResult + "\n";
 
+				// RETURNING THE RESULT
 				return finalResult;
 				}
 
