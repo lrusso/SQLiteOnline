@@ -465,15 +465,23 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				// CHECKING THE EXPORTING PROCESS STATUS
 				if (EXPORT_STATUS==EXPORT_STATUS_STAGE_1_CREATING_TABLES)
 					{
-					// LOOPING
+					// LOOPING THE RESULT (TBL_NAME AND THE SQL COMMAND TO CREATE EACH TABLE)
 					for (var i=0;i<values.length;i++)
 						{
+						// ADDING A BREAKLINE IF NECESSARY
 						if (finalResult!="")
 							{
 							finalResult = finalResult + "\n";
 							}
+
+						// INSERTING THE 'DROP TABLE IF EXISTS' COMMAND FOR THE CURRENT TABLE, TO THE SCRIPT
 						finalResult = finalResult + "DROP TABLE IF EXISTS " + values[i][0] + ";\n";
+
+						// INSERTING THE 'CREATE TABLE' COMMAND FOR THE CURRENT TABLE, TO THE SCRIPT
 						finalResult = finalResult + "\n" + values[i][1] + ";\n";
+
+						// ADDING THE CURRENT TABLE NAME TO AN ARRAY,
+						// BECAUSE IS REQUIRED IN THE NEXT STAGE OF THIS EXPORTING PROCESS
 						EXPORT_STATUS_TABLES_PENDING.push(values[i][0]);
 						}
 					}
