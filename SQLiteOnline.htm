@@ -418,8 +418,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				document.getElementById("SQLOnline_status").innerHTML = e.message;
 				}
 
-			// CREATING THE HTML TABLE
-			var SQLDisplayTable = function ()
+			// FUNCTION FOR DISPLAYING AN HTML TABLE WITH THE SQL RESULT
+			function SQLDisplayTable(columns,values)
 				{
 				function valconcat(vals,tagName)
 					{
@@ -428,37 +428,34 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					return open + vals.join(close + open) + close;
 					}
 
-				return function (columns,values)
+				// ADDING EXTRA COLUMN FOR THE ROW COUNTER
+				columns.unshift("&nbsp;");
+
+				// ADDING ROW COUNTER IN EACH ROW
+				for (var i=0;i<values.length;i++)
 					{
-					// ADDING EXTRA COLUMN FOR THE ROW COUNTER
-					columns.unshift("&nbsp;");
-
-					// ADDING ROW COUNTER IN EACH ROW
-					for (var i=0;i<values.length;i++)
-						{
-						values[i].unshift(i+1);
-						}
-
-					// CREATING THE DIV THAT WILL CONTAING THE TABLE
-					var resultDiv = document.createElement("div");
-					resultDiv.className = "SQLOnline_table";
-
-					// CREATING THE TABLE
-					var tbl = document.createElement("table");
-					var html = "<thead>" + valconcat(columns, "th") + "</thead>";
-					var rows = values.map(function (v){return valconcat(v, "td");});
-					html += "<tbody>" + valconcat(rows, "tr") + "</tbody>";
-					tbl.innerHTML = html;
-
-					// APPENDING THE TABLE TO THE DIV
-					resultDiv.appendChild(tbl);
-
-					// RETURNING THE DIV
-					return resultDiv;
+					values[i].unshift(i+1);
 					}
-				}();
 
-			// GETTING RAW DATA FOR THE EXPORTING PROCESS
+				// CREATING THE DIV THAT WILL CONTAING THE TABLE
+				var resultDiv = document.createElement("div");
+				resultDiv.className = "SQLOnline_table";
+
+				// CREATING THE TABLE
+				var tbl = document.createElement("table");
+				var html = "<thead>" + valconcat(columns, "th") + "</thead>";
+				var rows = values.map(function (v){return valconcat(v, "td");});
+				html += "<tbody>" + valconcat(rows, "tr") + "</tbody>";
+				tbl.innerHTML = html;
+
+				// APPENDING THE TABLE TO THE DIV
+				resultDiv.appendChild(tbl);
+
+				// RETURNING THE DIV
+				return resultDiv;
+				};
+
+			// FUNCTION FOR HANDLING THE RAW DATA FOR THE EXPORTING PROCESS
 			function SQLGetRAWData(columns,values)
 				{
 				var finalResult = "";
