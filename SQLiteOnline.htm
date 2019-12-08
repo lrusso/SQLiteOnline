@@ -129,9 +129,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			// CodeMirror - matchbrackets.min.js
 			!function(t){"object"==typeof exports&&"object"==typeof module?t(require("../../lib/codemirror")):"function"==typeof define&&define.amd?define(["../../lib/codemirror"],t):t(CodeMirror)}(function(t){var e=/MSIE \d/.test(navigator.userAgent)&&(null==document.documentMode||document.documentMode<8),n=t.Pos,r={"(":")>",")":"(<","[":"]>","]":"[<","{":"}>","}":"{<","<":">>",">":"<<"};function i(t){return t&&t.bracketRegex||/[(){}[\]]/}function a(t,e,a){var o=t.getLineHandle(e.line),l=e.ch-1,h=a&&a.afterCursor;null==h&&(h=/(^| )cm-fat-cursor($| )/.test(t.getWrapperElement().className));var s=i(a),u=!h&&l>=0&&s.test(o.text.charAt(l))&&r[o.text.charAt(l)]||s.test(o.text.charAt(l+1))&&r[o.text.charAt(++l)];if(!u)return null;var f=">"==u.charAt(1)?1:-1;if(a&&a.strict&&f>0!=(l==e.ch))return null;var m=t.getTokenTypeAt(n(e.line,l+1)),g=c(t,n(e.line,l+(f>0?1:0)),f,m||null,a);return null==g?null:{from:n(e.line,l),to:g&&g.pos,match:g&&g.ch==u.charAt(0),forward:f>0}}function c(t,e,a,c,o){for(var l=o&&o.maxScanLineLength||1e4,h=o&&o.maxScanLines||1e3,s=[],u=i(o),f=a>0?Math.min(e.line+h,t.lastLine()+1):Math.max(t.firstLine()-1,e.line-h),m=e.line;m!=f;m+=a){var g=t.getLine(m);if(g){var d=a>0?0:g.length-1,k=a>0?g.length:-1;if(!(g.length>l))for(m==e.line&&(d=e.ch-(a<0?1:0));d!=k;d+=a){var p=g.charAt(d);if(u.test(p)&&(void 0===c||t.getTokenTypeAt(n(m,d+1))==c)){var v=r[p];if(v&&">"==v.charAt(1)==a>0)s.push(p);else{if(!s.length)return{pos:n(m,d),ch:p};s.pop()}}}}}return m-a!=(a>0?t.lastLine():t.firstLine())&&null}function o(t,r,i){for(var c=t.state.matchBrackets.maxHighlightLineLength||1e3,o=[],l=t.listSelections(),h=0;h<l.length;h++){var s=l[h].empty()&&a(t,l[h].head,i);if(s&&t.getLine(s.from.line).length<=c){var u=s.match?"CodeMirror-matchingbracket":"CodeMirror-nonmatchingbracket";o.push(t.markText(s.from,n(s.from.line,s.from.ch+1),{className:u})),s.to&&t.getLine(s.to.line).length<=c&&o.push(t.markText(s.to,n(s.to.line,s.to.ch+1),{className:u}))}}if(o.length){e&&t.state.focused&&t.focus();var f=function(){t.operation(function(){for(var t=0;t<o.length;t++)o[t].clear()})};if(!r)return f;setTimeout(f,800)}}function l(t){t.operation(function(){t.state.matchBrackets.currentlyHighlighted&&(t.state.matchBrackets.currentlyHighlighted(),t.state.matchBrackets.currentlyHighlighted=null),t.state.matchBrackets.currentlyHighlighted=o(t,!1,t.state.matchBrackets)})}t.defineOption("matchBrackets",!1,function(e,n,r){r&&r!=t.Init&&(e.off("cursorActivity",l),e.state.matchBrackets&&e.state.matchBrackets.currentlyHighlighted&&(e.state.matchBrackets.currentlyHighlighted(),e.state.matchBrackets.currentlyHighlighted=null)),n&&(e.state.matchBrackets="object"==typeof n?n:{},e.on("cursorActivity",l))}),t.defineExtension("matchBrackets",function(){o(this,!0)}),t.defineExtension("findMatchingBracket",function(t,e,n){return(n||"boolean"==typeof e)&&(n?(n.strict=e,e=n):e=e?{strict:!0}:null),a(this,t,e)}),t.defineExtension("scanForBracket",function(t,e,n,r){return c(this,t,e,n,r)})});
 
-			var EXPORT_STATUS_TABLES_PENDING = [];
 			var EXPORT_STATUS_STAGE_1_CREATING_TABLES = 1;
 			var EXPORT_STATUS_STAGE_2_INSERTING_ROWS = 3;
+			var EXPORT_STATUS_TABLES_PENDING = [];
 			var EXPORT_STATUS_SCRIPT = "";
 			var EXPORT_STATUS = null;
 
@@ -141,97 +141,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			// SETTING THE FUNCTION THAT WILL BE EXECUTED FOR ANY SQLERROR
 			worker.onerror = SQLError;
 
-			// OPEN A DATABASE
+			// OPENING A TEMPORARY DATABASE
 			worker.postMessage({action:"open"});
-
-			// CREATING THE HTML TABLE
-			var addTable = function ()
-				{
-				function valconcat(vals,tagName)
-					{
-					if (vals.length === 0) return "";
-					var open = "<" + tagName + ">", close = "</" + tagName + ">";
-					return open + vals.join(close + open) + close;
-					}
-
-				return function (columns,values)
-					{
-					// ADDING EXTRA COLUMN FOR THE ROW COUNTER
-					columns.unshift("&nbsp;");
-
-					// ADDING ROW COUNTER IN EACH ROW
-					for (var i=0;i<values.length;i++)
-						{
-						values[i].unshift(i+1);
-						}
-
-					// CREATING THE DIV THAT WILL CONTAING THE TABLE
-					var resultDiv = document.createElement("div");
-					resultDiv.className = "SQLOnline_table";
-
-					// CREATING THE TABLE
-					var tbl = document.createElement("table");
-					var html = "<thead>" + valconcat(columns, "th") + "</thead>";
-					var rows = values.map(function (v){return valconcat(v, "td");});
-					html += "<tbody>" + valconcat(rows, "tr") + "</tbody>";
-					tbl.innerHTML = html;
-
-					// APPENDING THE TABLE TO THE DIV
-					resultDiv.appendChild(tbl);
-
-					// RETURNING THE DIV
-					return resultDiv;
-					}
-				}();
-
-			function addRawData(columns,values)
-				{
-				var finalResult = "";
-
-				if (EXPORT_STATUS==EXPORT_STATUS_STAGE_1_CREATING_TABLES)
-					{
-					for (var i=0;i<values.length;i++)
-						{
-						if (finalResult!="")
-							{
-							finalResult = finalResult + "\n";
-							}
-						finalResult = finalResult + "DROP TABLE IF EXISTS " + values[i][0] + ";\n";
-						finalResult = finalResult + "\n" + values[i][1] + ";\n";
-						EXPORT_STATUS_TABLES_PENDING.push(values[i][0]);
-						}
-					}
-				else if (EXPORT_STATUS==EXPORT_STATUS_STAGE_2_INSERTING_ROWS)
-					{
-					for (var i=0;i<values.length;i++)
-						{
-						finalResult = finalResult + "INSERT INTO " + EXPORT_STATUS_TABLES_PENDING[0] + " VALUES (";
-
-						for (var j=0;j<values[i].length;j++)
-							{
-							if (j>0)
-								{
-								finalResult = finalResult + ", ";
-								}
-							if (typeof values[i][j] === "string" || values[i][j] instanceof String)
-								{
-								finalResult = finalResult + "\"" + values[i][j] + "\"";
-								}
-								else
-								{
-								finalResult = finalResult + values[i][j];
-								}
-							}
-
-						finalResult = finalResult +  ");\n";
-						}
-					EXPORT_STATUS_TABLES_PENDING.shift();
-					}
-
-				finalResult = finalResult + "\n";
-
-				return finalResult;
-				}
 
 			function documentNew()
 				{
@@ -395,7 +306,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			function SQLExecute(myQuery)
 				{
-				// UPDATING LABELS
+				// UPDATING LABELS IF THERE IS NO EXPORTING PROCESS RUNNING
 				if (EXPORT_STATUS==null)
 					{
 					document.getElementById("SQLOnline_status").innerHTML = "";
@@ -411,6 +322,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					// GETTING THE RESULT
 					var results = event.data.results;
 
+					// IF A EXPORTING PROCESS IS NOT RUNNING, EVERY SQL COMMAND WILL BE EXECUTED AS NORMAL
 					if (EXPORT_STATUS==null)
 						{
 						// GETTING HOW MUCH TIME TOOK THE SQL COMMANDS TO BE EXECUTED
@@ -422,14 +334,16 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						// LOOPING THE RESULT AND CREATING A TABLE FOR EACH CASE
 						for (var i = 0; i < results.length; i++)
 							{
-							document.getElementById("SQLOnline_output").appendChild(addTable(results[i].columns,results[i].values));
+							// DISPLAYING A TABLE WITH THE RESULT
+							document.getElementById("SQLOnline_output").appendChild(SQLDisplayTable(results[i].columns,results[i].values));
 							}
 						}
 						else
 						{
+						// ADDING RAW DATA TO THE SCRIPT, ACCORDING EACH STAGE OF THE EXPORTING PROCESS
 						for (var i = 0; i < results.length; i++)
 							{
-							EXPORT_STATUS_SCRIPT = EXPORT_STATUS_SCRIPT + addRawData(results[i].columns,results[i].values);
+							EXPORT_STATUS_SCRIPT = EXPORT_STATUS_SCRIPT + SQLGetRAWData(results[i].columns,results[i].values);
 							}
 
 						if (EXPORT_STATUS==EXPORT_STATUS_STAGE_1_CREATING_TABLES)
@@ -466,7 +380,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 				if (myQuery==null)
 					{
-					// EXECUTING SQL COMMANDS
+					// EXECUTING ALL THE SQL COMMANDS WRITTEN BY THE END USER
 					worker.postMessage({action:"exec",sql:editor.getValue()+";"});
 					}
 					else
@@ -478,7 +392,10 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			function SQLExport()
 				{
+				// SETTING THE FIRST STAGE OF THE EXPORTING PROCESS
 				EXPORT_STATUS = EXPORT_STATUS_STAGE_1_CREATING_TABLES;
+
+				// EXECUTING THE FIRST QUERY IN ORDER TO GET EACH TABLE AND THE SQL COMMAND TO CREATE EACH ONE
 				SQLExecute("SELECT tbl_name, sql FROM sqlite_master;");
 				}
 
@@ -509,6 +426,96 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				{
 				// SHOWING THE ERROR
 				document.getElementById("SQLOnline_status").innerHTML = e.message;
+				}
+
+			// CREATING THE HTML TABLE
+			var SQLDisplayTable = function ()
+				{
+				function valconcat(vals,tagName)
+					{
+					if (vals.length === 0) return "";
+					var open = "<" + tagName + ">", close = "</" + tagName + ">";
+					return open + vals.join(close + open) + close;
+					}
+
+				return function (columns,values)
+					{
+					// ADDING EXTRA COLUMN FOR THE ROW COUNTER
+					columns.unshift("&nbsp;");
+
+					// ADDING ROW COUNTER IN EACH ROW
+					for (var i=0;i<values.length;i++)
+						{
+						values[i].unshift(i+1);
+						}
+
+					// CREATING THE DIV THAT WILL CONTAING THE TABLE
+					var resultDiv = document.createElement("div");
+					resultDiv.className = "SQLOnline_table";
+
+					// CREATING THE TABLE
+					var tbl = document.createElement("table");
+					var html = "<thead>" + valconcat(columns, "th") + "</thead>";
+					var rows = values.map(function (v){return valconcat(v, "td");});
+					html += "<tbody>" + valconcat(rows, "tr") + "</tbody>";
+					tbl.innerHTML = html;
+
+					// APPENDING THE TABLE TO THE DIV
+					resultDiv.appendChild(tbl);
+
+					// RETURNING THE DIV
+					return resultDiv;
+					}
+				}();
+
+			// GETTING RAW DATA FOR THE EXPORTING PROCESS
+			function SQLGetRAWData(columns,values)
+				{
+				var finalResult = "";
+
+				if (EXPORT_STATUS==EXPORT_STATUS_STAGE_1_CREATING_TABLES)
+					{
+					for (var i=0;i<values.length;i++)
+						{
+						if (finalResult!="")
+							{
+							finalResult = finalResult + "\n";
+							}
+						finalResult = finalResult + "DROP TABLE IF EXISTS " + values[i][0] + ";\n";
+						finalResult = finalResult + "\n" + values[i][1] + ";\n";
+						EXPORT_STATUS_TABLES_PENDING.push(values[i][0]);
+						}
+					}
+				else if (EXPORT_STATUS==EXPORT_STATUS_STAGE_2_INSERTING_ROWS)
+					{
+					for (var i=0;i<values.length;i++)
+						{
+						finalResult = finalResult + "INSERT INTO " + EXPORT_STATUS_TABLES_PENDING[0] + " VALUES (";
+
+						for (var j=0;j<values[i].length;j++)
+							{
+							if (j>0)
+								{
+								finalResult = finalResult + ", ";
+								}
+							if (typeof values[i][j] === "string" || values[i][j] instanceof String)
+								{
+								finalResult = finalResult + "\"" + values[i][j] + "\"";
+								}
+								else
+								{
+								finalResult = finalResult + values[i][j];
+								}
+							}
+
+						finalResult = finalResult +  ");\n";
+						}
+					EXPORT_STATUS_TABLES_PENDING.shift();
+					}
+
+				finalResult = finalResult + "\n";
+
+				return finalResult;
 				}
 
 			// STARTING THE CODE TEXT EDITOR
