@@ -304,7 +304,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				}
 
-			function SQLExecute(myQuery)
+			function SQLExecute(systemQuery)
 				{
 				// UPDATING LABELS IF THERE IS NO EXPORTING PROCESS RUNNING
 				if (EXPORT_STATUS==null)
@@ -368,7 +368,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						}
 					}
 
-				if (myQuery==null)
+				// CHECKING IF IT IS A SYSTEM QUERY OR A END USER QUERY
+				if (systemQuery==null)
 					{
 					// EXECUTING ALL THE SQL COMMANDS WRITTEN BY THE END USER
 					worker.postMessage({action:"exec",sql:editor.getValue()+";"});
@@ -376,7 +377,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					else
 					{
 					// EXECUTING SQL QUERY
-					worker.postMessage({action:"exec",sql:myQuery});
+					worker.postMessage({action:"exec",sql:systemQuery});
 					}
 				}
 
@@ -458,10 +459,13 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			// FUNCTION FOR HANDLING THE RAW DATA FOR THE EXPORTING PROCESS
 			function SQLGetRAWData(columns,values)
 				{
+				// CREATING A VARIABLE THAT WILL CONTAIN THE SQL COMMANDS
 				var finalResult = "";
 
+				// CHECKING THE EXPORTING PROCESS STATUS
 				if (EXPORT_STATUS==EXPORT_STATUS_STAGE_1_CREATING_TABLES)
 					{
+					// LOOPING
 					for (var i=0;i<values.length;i++)
 						{
 						if (finalResult!="")
