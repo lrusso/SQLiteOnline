@@ -340,19 +340,6 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				}
 
-function insertStringInTemplate(str)
-{
-    var doc = editor.getDoc();
-    var cursor = doc.getCursor();
-
-    var pos = {
-        line: cursor.line,
-        ch: cursor.ch
-    }
-
-    doc.replaceRange(str, pos);
-}
-
 			function documentSave()
 				{
 				try
@@ -437,6 +424,12 @@ function insertStringInTemplate(str)
 							// DISPLAYING A TABLE WITH THE RESULT
 							document.getElementById("SQLOnline_output").appendChild(SQLDisplayTable(results[i].columns,results[i].values));
 							}
+
+						// CHECKING IF IT IS A MOBILE DEVICE
+						if(isAMobileDevice()==false)
+							{
+							editor.focus();
+							}
 						}
 						else
 						{
@@ -464,6 +457,12 @@ function insertStringInTemplate(str)
 							EXPORT_STATUS = null;
 							EXPORT_STATUS_TABLES_PENDING = [];
 							EXPORT_STATUS_SCRIPT = "";
+
+							// CHECKING IF IT IS A MOBILE DEVICE
+							if(isAMobileDevice()==false)
+								{
+								editor.focus();
+								}
 							}
 						}
 					}
@@ -517,6 +516,12 @@ function insertStringInTemplate(str)
 				{
 				// SHOWING THE ERROR
 				document.getElementById("SQLOnline_status").innerHTML = e.message;
+
+				// CHECKING IF IT IS A MOBILE DEVICE
+				if(isAMobileDevice()==false)
+					{
+					editor.focus();
+					}
 				}
 
 			// FUNCTION FOR DISPLAYING AN HTML TABLE WITH THE SQL RESULT
@@ -628,6 +633,24 @@ function insertStringInTemplate(str)
 
 				// RETURNING THE RESULT
 				return finalResult;
+				}
+
+			function isAMobileDevice()
+				{
+				if(navigator.userAgent.match(/Android/i) ||
+					navigator.userAgent.match(/webOS/i) ||
+					navigator.userAgent.match(/iPhone/i) ||
+					navigator.userAgent.match(/iPad/i) ||
+					navigator.userAgent.match(/iPod/i) ||
+					navigator.userAgent.match(/BlackBerry/i) ||
+					navigator.userAgent.match(/Windows Phone/i))
+					{
+					return true;
+					}
+					else
+					{
+					return false;
+					}
 				}
 
 			// STARTING THE CODE TEXT EDITOR
