@@ -550,7 +550,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				// CREATING THE TABLE
 				var tbl = document.createElement("table");
 				var html = "<thead>" + valconcat(columns, "th") + "</thead>";
-				var rows = values.map(function (v){return valconcat(v, "td");});
+				var rows = values.map(function (v){return valconcat(v, "td")});
 				html += "<tbody>" + valconcat(rows, "tr") + "</tbody>";
 				tbl.innerHTML = html;
 
@@ -677,7 +677,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			window.onload = function()
 				{
 				document.getElementById("buttonNew").addEventListener("click",function(event){documentNew()});
-				document.getElementById("buttonOpen").addEventListener("click",function(event){document.getElementById("fileOpener").click();});
+				document.getElementById("buttonOpen").addEventListener("click",function(event){document.getElementById("fileOpener").click()});
 				document.getElementById("buttonSave").addEventListener("click",function(event){documentSave()});
 				document.getElementById("buttonUndo").addEventListener("click",function(event){documentUndo()});
 				document.getElementById("buttonRedo").addEventListener("click",function(event){documentRedo()});
