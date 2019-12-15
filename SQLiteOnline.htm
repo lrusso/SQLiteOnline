@@ -198,31 +198,29 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				{
 				try
 					{
-					var executeOpenDocument = true;
-
-					// IF THE DOCUMENT IS DIRTY, A DISCARD CHANGES QUESTION WILL SHOW UP
-					if (editorDirty==true)
+					// CHECKING IF THE FILE HAS A SQL OR XLSX EXTENSION
+					var extension = file.name.split(".").pop().toLowerCase();
+					if (extension=="sql" | extension=="xlsx")
 						{
-						executeOpenDocument = confirm("Lose unsaved changes?");
-						}
-
-					// IF THE USER DISCARDS CHANGES OR OPENS A DOCUMENT
-					if (executeOpenDocument == true)
-						{
-						// CREATING THE FILEREADER
-						var filereader = new FileReader();
-						filereader.file_name = file.name;
-
-						// SETTING THE FILE NAME
-						STRING_FILENAME = file.name;
-
-						// CHECKING IF THE FILE HAS A SQL OR XLSX EXTENSION
-						var extension = file.name.split(".").pop().toLowerCase();
-						if (extension=="sql" | extension=="xlsx")
+						// CHECKING THE FILE EXTENSION
+						if (extension=="sql")
 							{
-							// CHECKING THE FILE EXTENSION
-							if (extension=="sql")
+							var executeOpenDocument = true;
+
+							// IF THE DOCUMENT IS DIRTY, A DISCARD CHANGES QUESTION WILL SHOW UP
+							if (editorDirty==true)
 								{
+								executeOpenDocument = confirm("Lose unsaved changes?");
+								}
+
+							// IF THE USER DISCARDS CHANGES OR OPENS A DOCUMENT
+							if (executeOpenDocument == true)
+								{
+								// CREATING THE FILEREADER
+								var filereader = new FileReader();
+								filereader.file_name = file.name;
+
+								// SETTING WHAT WILL HAPPEN THE FILE IS LOADED
 								filereader.onload = function()
 									{
 									// GETTING THE FILE CONTENT
@@ -250,90 +248,95 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 								// READING THE FILE
 								filereader.readAsText(file,"ISO-8859-1");
 								}
-							else if (extension=="xlsx")
+							}
+						else if (extension=="xlsx")
+							{
+							// CREATING THE FILEREADER
+							var filereader = new FileReader();
+							filereader.file_name = file.name;
+
+							// SETTING WHAT WILL HAPPEN THE FILE IS LOADED
+							filereader.onload = function()
 								{
-								filereader.onload = function()
+								// GETTING THE FILE CONTENT
+								var data = this.result;
+								var dataView = new Uint8Array(data);
+
+								// GETTING THE WORKBOOK
+								var workbook = ExcelReader.read(data, {type:"array"});
+
+								// CREATING THE VARIABLE THAT WILL CONTAIN ALL THE 'INSERT INTO' COMMANDS
+								var finalResult = "";
+
+								// READING EVERY SHEET
+								workbook.SheetNames.forEach(function(sheetName)
 									{
-									// GETTING THE FILE CONTENT
-									var data = this.result;
-									var dataView = new Uint8Array(data);
+									// GETTING THE SHEET IN CSV FORMAT
+									var csv = ExcelReader.utils.sheet_to_csv(workbook.Sheets[sheetName]);
 
-									// GETTING THE WORKBOOK
-									var workbook = ExcelReader.read(data, {type:"array"});
-
-									// CREATING THE VARIABLE THAT WILL CONTAIN ALL THE 'INSERT INTO' COMMANDS
-									var finalResult = "";
-
-									// READING EVERY SHEET
-									workbook.SheetNames.forEach(function(sheetName)
+									// CHECKING IF THERE IS CONTENT
+									if(csv.length)
 										{
-										// GETTING THE SHEET IN CSV FORMAT
-										var csv = ExcelReader.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+										// GETTING THE ROWS AS AN ARRAY
+										var rows = csv.split("BREAKLINELRUSSOCOM");
 
-										// CHECKING IF THERE IS CONTENT
-										if(csv.length)
+										// LOOPING EVERY ROW
+										for(var i=0;i<rows.length;i++)
 											{
-											// GETTING THE ROWS AS AN ARRAY
-											var rows = csv.split("BREAKLINELRUSSOCOM");
-
-											// LOOPING EVERY ROW
-											for(var i=0;i<rows.length;i++)
+											// CHECKING IF THE ROW HAS CONTENT
+											if (rows[i].length>0)
 												{
-												// CHECKING IF THE ROW HAS CONTENT
-												if (rows[i].length>0)
+												// GETTING EACH CELL VALUE AS AN ARRAY
+												var row = rows[i].split("DIVISORLRUSSOCOM");
+
+												// STARTING THE SQL COMMAND
+												finalResult = finalResult + "INSERT INTO " + sheetName + " VALUES (";
+
+												// LOOPING EVERY CELL VALUE
+												for(var j=0;j<row.length;j++)
 													{
-													// GETTING EACH CELL VALUE AS AN ARRAY
-													var row = rows[i].split("DIVISORLRUSSOCOM");
+													// SETTING THE CELL VALUE IN A VARIABLE
+													var cellValue = row[j];
 
-													// STARTING THE SQL COMMAND
-													finalResult = finalResult + "INSERT INTO " + sheetName + " VALUES (";
+													// INSERTING THE CELL VALUE
+													finalResult = finalResult + "\"" + cellValue + "\"";
 
-													// LOOPING EVERY CELL VALUE
-													for(var j=0;j<row.length;j++)
+													// INSERTING A COMMA, IF REQUIRED
+													if (j<row.length - 1)
 														{
-														// SETTING THE CELL VALUE IN A VARIABLE
-														var cellValue = row[j];
-
-														// INSERTING THE CELL VALUE
-														finalResult = finalResult + "\"" + cellValue + "\"";
-
-														// INSERTING A COMMA, IF REQUIRED
-														if (j<row.length - 1)
-															{
-															finalResult = finalResult + ", ";
-															}
+														finalResult = finalResult + ", ";
 														}
-
-													// CLOSING THE SQL COMMAND
-													finalResult = finalResult + ");\n";
 													}
+
+												// CLOSING THE SQL COMMAND
+												finalResult = finalResult + ");\n";
 												}
 											}
-										});
+										}
+									});
 
-									// INSERTING THE FINAL RESULT
-									var doc = editor.getDoc();
-									var cursor = doc.getCursor();
-									doc.replaceRange(finalResult, cursor);
-									editor.focus();
+								// INSERTING THE FINAL RESULT
+								var doc = editor.getDoc();
+								var cursor = doc.getCursor();
+								doc.replaceRange(finalResult, cursor);
+								editor.focus();
 
-									// CLEARING THE SELECTED FILE VALUE
-									document.getElementById("fileOpener").value = null;
-									};
+								// CLEARING THE SELECTED FILE VALUE
+								document.getElementById("fileOpener").value = null;
+								};
 
-								// READING THE FILE
-								filereader.readAsArrayBuffer(file);
-								}
+							// READING THE FILE
+							filereader.readAsArrayBuffer(file);
 							}
-							else
-							{
-							alert("ERROR: Please check that the file has a SQL or XLSX extension and format.")
-							editor.focus();
-							}
+
+						// CLEARING THE SELECTED FILE VALUE
+						document.getElementById("fileOpener").value = null;
 						}
-
-					// CLEARING THE SELECTED FILE VALUE
-					document.getElementById("fileOpener").value = null;
+						else
+						{
+						alert("ERROR: Please check that the file has a SQL or XLSX extension and format.")
+						editor.focus();
+						}
 					}
 					catch(err)
 					{
