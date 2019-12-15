@@ -659,7 +659,7 @@ function insertStringInTemplate(str)
 				document.getElementById("buttonUndo").addEventListener("click",function(event){documentUndo()});
 				document.getElementById("buttonRedo").addEventListener("click",function(event){documentRedo()});
 				document.getElementById("buttonExecute").addEventListener("click",function(event){SQLExecute(null)});
-				document.getElementById("buttonTables").addEventListener("click",function(event){SQLExecute("SELECT * FROM sqlite_master;")});
+				document.getElementById("buttonTables").addEventListener("click",function(event){SQLExecute("SELECT tbl_name AS 'table', sql FROM sqlite_master;")});
 				document.getElementById("buttonExport").addEventListener("click",function(event){SQLExport()});
 				document.getElementsByClassName("SQLOnline_splash")[0].style.display = "none";
 				document.getElementsByClassName("SQLOnline_splash_container")[0].style.display = "none";
