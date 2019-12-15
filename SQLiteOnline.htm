@@ -268,6 +268,18 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 								// CREATING THE VARIABLE THAT WILL CONTAIN ALL THE 'INSERT INTO' COMMANDS
 								var finalResult = "";
 
+								// ASKING THE USER IF THE FIRST ROW MUST BE IGNORED (USUALLY ARE FOR FIELDNAMES)
+								var ignoreFirstRow = confirm("Ignore the first row while importing?");
+
+								// CREATING THE VARIABLE THAT CONTAIN THE INITIAL ROW NUMBER
+								var ignoreFirstRowValue = 0;
+
+								// UPDATING THE INITIAL ROW NUMBER (IF REQUIRED BY THE USER)
+								if (ignoreFirstRow == true)
+									{
+									ignoreFirstRowValue = 1;
+									}
+
 								// READING EVERY SHEET
 								workbook.SheetNames.forEach(function(sheetName)
 									{
@@ -281,7 +293,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 										var rows = csv.split("BREAKLINELRUSSOCOM");
 
 										// LOOPING EVERY ROW
-										for(var i=0;i<rows.length;i++)
+										for(var i=ignoreFirstRowValue;i<rows.length;i++)
 											{
 											// CHECKING IF THE ROW HAS CONTENT
 											if (rows[i].length>0)
