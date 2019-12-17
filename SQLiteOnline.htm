@@ -220,7 +220,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 			// SETTING THE DEFAULT VALUES FOR A SPREADSHEET PREVIEW
 			var ExcelDataRAW = null;
-			var ExcelPreviewRow = [];
+			var ExcelPreviewColumn = [];
 			var ExcelFirstRow = 0;
 			var ExcelFinalResult = "";
 
@@ -342,7 +342,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 								// UPDATING THE VALUES FOR THE SPREADSHEET PREVIEW
 								ExcelDataRAW = data;
-								ExcelPreviewRow = [];
+								ExcelPreviewColumn = [];
 								ExcelFirstRow = 0;
 								ExcelFinalResult = "";
 
@@ -690,7 +690,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			function updateExcelPreview()
 				{
 				// CLEARING THE SPREADSHEET PREVIEW
-				ExcelPreviewRow = [];
+				ExcelPreviewColumn = [];
 
 				// CLEARING THE EXCEL FINAL RESULT
 				ExcelFinalResult = "";
@@ -743,7 +743,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 									// ADDING THE FIRST VALUE (FROM THE FIRST COLUMN) TO THE SPREADSHEET PREVIEW
 									if (j==0)
 										{
-										ExcelPreviewRow.push(cellValue);
+										ExcelPreviewColumn.push(cellValue);
 										firstInputted = false;
 										}
 									}
@@ -755,17 +755,17 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						}
 					});
 
-				// CLEARING THE VALUES FOR THE SAMPLE ROWS
+				// CLEARING THE VALUES FOR THE SAMPLE COLUMN
 				document.getElementsByClassName("SQLOnline_excel_fields")[0].innerHTML = "";
 				document.getElementsByClassName("SQLOnline_excel_fields")[1].innerHTML = "";
 				document.getElementsByClassName("SQLOnline_excel_fields")[2].innerHTML = "";
 				document.getElementsByClassName("SQLOnline_excel_fields")[3].innerHTML = "";
 				document.getElementsByClassName("SQLOnline_excel_fields")[4].innerHTML = "";
 
-				// UPDATING THE VALUES FOR THE SAMPLE ROWS
-				for (var i=0;i<ExcelPreviewRow.length;i++)
+				// UPDATING THE VALUES FOR THE SAMPLE COLUMN
+				for (var i=0;i<ExcelPreviewColumn.length;i++)
 					{
-					document.getElementsByClassName("SQLOnline_excel_fields")[i].innerHTML = ExcelPreviewRow[i];
+					document.getElementsByClassName("SQLOnline_excel_fields")[i].innerHTML = ExcelPreviewColumn[i];
 					}
 
 				// SHOWING THE SPREADSHEET PREVIEW
