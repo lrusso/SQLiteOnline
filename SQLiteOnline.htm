@@ -725,8 +725,6 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 								// STARTING THE SQL COMMAND
 								ExcelFinalResult = ExcelFinalResult + "INSERT INTO " + sheetName + " VALUES (";
 
-								var firstInputted = true;
-
 								// LOOPING EVERY CELL VALUE
 								for(var j=0;j<row.length;j++)
 									{
@@ -742,7 +740,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 										ExcelFinalResult = ExcelFinalResult + ", ";
 										}
 
-									if (firstInputted==true)
+									// ADDING THE FIRST VALUE (FROM THE FIRST COLUMN) TO THE SPREADSHEET PREVIEW
+									if (j==0)
 										{
 										ExcelPreviewRow.push(cellValue);
 										firstInputted = false;
