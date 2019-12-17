@@ -696,9 +696,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				ExcelFinalResult = "";
 
 				// UPDATING THE VALUE FOR THE FIRST ROW (HEADER SIZE)
-				var e = document.getElementsByClassName("SQLOnline_excel_headersize_select")[0];
-				var strUser = e.options[e.selectedIndex].value;
-				ExcelFirstRow = strUser;
+				ExcelFirstRow = document.getElementsByClassName("SQLOnline_excel_headersize_select")[0].options[document.getElementsByClassName("SQLOnline_excel_headersize_select")[0].selectedIndex].value;
 
 				// GETTING THE WORKBOOK
 				var workbook = ExcelReader.read(ExcelDataRAW, {type:"array"});
@@ -788,7 +786,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					// GETTING THE CURSOR
 					var cursor = doc.getCursor();
 
-					// REPLACING SELECTION WITH ALL THE EXCEL-TO-SQL FORMULAS
+					// REPLACING THE CURRENT TEXT SELECTION (IF ANY) WITH ALL THE SPREADSHEETS-TO-SQL COMMANDS
 					doc.replaceRange(ExcelFinalResult, cursor);
 
 					// FOCUSING THE EDITOR
