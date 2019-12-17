@@ -349,6 +349,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 								// RESTORING DEFAULT VALUE FOR THE HEADER SIZE
 								document.getElementsByClassName("SQLOnline_excel_headersize_select")[0].selectedIndex = 0;
 
+								// DISABLING THE EDITOR
+								editor.setOption("readOnly",true);
+
 								// SHOWING THE SPREADSHEET PREVIEW
 								updateExcelPreview();
 
@@ -777,6 +780,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				// HIDDING THE SPREADSHEET PREVIEW
 				document.getElementsByClassName("SQLOnline_excel_background")[0].style.display = "none";
 
+				// ENABLING THE EDITOR
+				editor.setOption("readOnly",false);
+
 				try
 					{
 					// GETTING THE EDITOR CONTENT
@@ -834,7 +840,10 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 				try
 					{
+					// ENABLING THE EDITOR
 					editor.setOption("readOnly",false);
+
+					// FOCUSING THE EDITOR
 					editor.focus();
 					}
 					catch(err)
