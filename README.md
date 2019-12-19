@@ -2,7 +2,7 @@
 
 SQLite Online using HTML5 with Emscripten.
 
-![alt screenshot](https://raw.githubusercontent.com/lrusso/SQLiteOnline/master/SQLiteOnline.png)
+![alt screenshot](https://raw.githubusercontent.com/lrusso/SQLiteOnline/master/SQLiteOnline1.png)
 
 ## Web:
 
