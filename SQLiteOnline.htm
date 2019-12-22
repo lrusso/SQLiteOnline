@@ -215,6 +215,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			var EXPORT_STATUS_SCRIPT = "";
 			var EXPORT_STATUS = null;
 
+			var QUERY_ALL_TABLES = false;
+
 			// SETTING THE EXCEL READER
 			var ExcelReader = XLSX;
 
@@ -446,8 +448,33 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					// GETTING THE RESULT
 					var results = event.data.results;
 
+					// CHECKING IF A QUERY ALL TABLES PROCESS IS ENABLED
+					if (QUERY_ALL_TABLES==true)
+						{
+						// RETURN TO THE DEFAULT STATE
+						QUERY_ALL_TABLES = false;
+
+						// CREATING VARIABLE THAT WILL CONTAIN THE FINAL QUERY FOR ALL THE TABLES
+						var myQueryTemp = "";
+
+						// LOOPING EVERY TABLE FIELD NAME
+						for (var i = 0; i < results[0].values.length; i++)
+							{
+							if (myQueryTemp!="")
+								{
+								myQueryTemp = myQueryTemp + "\nUNION ALL\n\n";
+								}
+							myQueryTemp = myQueryTemp + ("SELECT '" + results[0].values[i][0] + "' AS 'table', COUNT(*) AS 'rows', (SELECT sql FROM sqlite_master WHERE tbl_name='" + results[0].values[i][0] + "') as 'sql' FROM " + results[0].values[i][0]);
+							}
+
+						// QUERY ORDER BY TABLE
+						myQueryTemp = myQueryTemp + " ORDER BY \"table\";"
+
+						// EXECUTING THE QUERY
+						SQLExecute(myQueryTemp);
+						}
 					// IF A EXPORTING PROCESS IS NOT RUNNING, EVERY SQL COMMAND WILL BE EXECUTED AS NORMAL
-					if (EXPORT_STATUS==null)
+					else if (EXPORT_STATUS==null)
 						{
 						// GETTING HOW MUCH TIME TOOK THE SQL COMMANDS TO BE EXECUTED
 						var dt = new Date().getTime() - initialTime;
@@ -768,7 +795,13 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				// UPDATING THE VALUES FOR THE SAMPLE COLUMN
 				for (var i=0;i<ExcelPreviewColumn.length;i++)
 					{
-					document.getElementsByClassName("SQLOnline_excel_fields")[i].innerHTML = ExcelPreviewColumn[i];
+					try
+						{
+						document.getElementsByClassName("SQLOnline_excel_fields")[i].innerHTML = ExcelPreviewColumn[i];
+						}
+						catch(err)
+						{
+						}
 					}
 
 				// SHOWING THE SPREADSHEET PREVIEW
@@ -830,9 +863,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				document.getElementById("buttonSave").addEventListener("click",function(event){documentSave()});
 				document.getElementById("buttonUndo").addEventListener("click",function(event){documentUndo()});
 				document.getElementById("buttonRedo").addEventListener("click",function(event){documentRedo()});
-				document.getElementById("buttonExecute").addEventListener("click",function(event){SQLExecute(null)});
-				document.getElementById("buttonTables").addEventListener("click",function(event){SQLExecute("SELECT tbl_name AS 'table', sql FROM sqlite_master;")});
-				document.getElementById("buttonExport").addEventListener("click",function(event){SQLExport()});
+				document.getElementById("buttonExecute").addEventListener("click",function(event){QUERY_ALL_TABLES=false;SQLExecute(null)});
+				document.getElementById("buttonTables").addEventListener("click",function(event){QUERY_ALL_TABLES=true;SQLExecute("SELECT tbl_name AS 'table', sql FROM sqlite_master;")});
+				document.getElementById("buttonExport").addEventListener("click",function(event){QUERY_ALL_TABLES=false;SQLExport()});
 				document.getElementsByClassName("SQLOnline_excel_headersize_select")[0].addEventListener("change",function(event){updateExcelPreview()});
 				document.getElementsByClassName("SQLOnline_splash")[0].style.display = "none";
 				document.getElementsByClassName("SQLOnline_splash_container")[0].style.display = "none";
