@@ -466,7 +466,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 								{
 								myQueryTemp = myQueryTemp + "\nUNION ALL\n\n";
 								}
-							myQueryTemp = myQueryTemp + ("SELECT '" + results[0].values[i][0] + "' AS 'table', COUNT(*) AS 'rows', (SELECT sql FROM sqlite_master WHERE tbl_name='" + results[0].values[i][0] + "') as 'sql' FROM " + results[0].values[i][0]);
+							myQueryTemp = myQueryTemp + ("SELECT \"" + results[0].values[i][0] + "\" AS \"table\", COUNT(*) AS \"rows\", (SELECT sql FROM sqlite_master WHERE tbl_name=\"" + results[0].values[i][0] + "\") as \"sql\" FROM " + results[0].values[i][0]);
 							}
 
 						// QUERY ORDER BY TABLE
