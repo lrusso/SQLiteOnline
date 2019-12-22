@@ -8,6 +8,6 @@ SQLite Online using HTML5 with Emscripten.
 
 https://lrusso.github.io/SQLiteOnline/SQLiteOnline.htm
 
-## QUICK GUIDE: Select an Excel file and import the spreadsheets as SQL tables
+## QUICK GUIDE: Select an Excel file and import all the rows from the every table
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/SQLiteOnline/master/SQLiteOnline2.png)
