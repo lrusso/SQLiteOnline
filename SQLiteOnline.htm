@@ -213,6 +213,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			var EXPORT_STATUS_STAGE_1_CREATING_TABLES = 1;
 			var EXPORT_STATUS_STAGE_2_INSERTING_ROWS = 2;
 			var EXPORT_STATUS_TABLES_PENDING = [];
+			var EXPORT_STATUS_LATEST_TABLE = "";
 			var EXPORT_STATUS_SCRIPT = "";
 			var EXPORT_STATUS = null;
 
@@ -511,8 +512,13 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						// CHECKING IF THERE IS A TABLE CREATED
 						if (EXPORT_STATUS_TABLES_PENDING.length>0)
 							{
+							EXPORT_STATUS_LATEST_TABLE = EXPORT_STATUS_TABLES_PENDING[0];
+
+							// REMOVING THE TABLE NAME FROM THE 'TABLES PENDING' ARRAY
+							EXPORT_STATUS_TABLES_PENDING.shift();
+
 							// EXECUTING THE QUERY TO GET ALL THE ROWS FROM THE FIRST TABLE
-							SQLExecute("SELECT * FROM " + EXPORT_STATUS_TABLES_PENDING[0]);
+							SQLExecute("SELECT * FROM " + EXPORT_STATUS_LATEST_TABLE);
 							}
 							else
 							{
@@ -522,6 +528,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 							// CLEARING VALUES
 							EXPORT_STATUS = null;
 							EXPORT_STATUS_TABLES_PENDING = [];
+							EXPORT_STATUS_LATEST_TABLE = "";
 							EXPORT_STATUS_SCRIPT = "";
 
 							// CHECKING IF IT IS A MOBILE DEVICE
@@ -662,7 +669,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					for (var i=0;i<values.length;i++)
 						{
 						// STARTING THE SQL COMMAND
-						finalResult = finalResult + "INSERT INTO " + EXPORT_STATUS_TABLES_PENDING[0] + " VALUES (";
+						finalResult = finalResult + "INSERT INTO " + EXPORT_STATUS_LATEST_TABLE + " VALUES (";
 
 						// LOOPING THE ROW (FOR CELL VALUES)
 						for (var j=0;j<values[i].length;j++)
@@ -689,9 +696,6 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						// ENDING THE SQL COMMAND
 						finalResult = finalResult +  ");\n";
 						}
-
-					// REMOVING THE TABLE NAME FROM THE 'TABLES PENDING' ARRAY
-					EXPORT_STATUS_TABLES_PENDING.shift();
 					}
 
 				// ADDING A BREAKLINE
