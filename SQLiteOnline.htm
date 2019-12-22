@@ -460,87 +460,115 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						// CREATING VARIABLE THAT WILL CONTAIN THE FINAL QUERY FOR ALL THE TABLES
 						var myQueryTemp = "";
 
-						// LOOPING EVERY TABLE FIELD NAME
-						for (var i = 0; i < results[0].values.length; i++)
+						try
 							{
-							if (myQueryTemp!="")
+							// LOOPING EVERY TABLE FIELD NAME
+							for (var i = 0; i < results[0].values.length; i++)
 								{
-								myQueryTemp = myQueryTemp + "\nUNION ALL\n\n";
+								if (myQueryTemp!="")
+									{
+									myQueryTemp = myQueryTemp + "\nUNION ALL\n\n";
+									}
+								myQueryTemp = myQueryTemp + "SELECT \"" + results[0].values[i][0] + "\" AS \"table\",";
+								myQueryTemp = myQueryTemp + "COUNT(*) AS \"rows\",";
+								myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (name,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + results[0].values[i][0] + "\")) AS \"field\",";
+								myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (type,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + results[0].values[i][0] + "\")) AS \"field_type\",";
+								myQueryTemp = myQueryTemp + "(SELECT sql FROM sqlite_master WHERE tbl_name=\"" + results[0].values[i][0] + "\") as \"sql\"";
+								myQueryTemp = myQueryTemp + " FROM " + results[0].values[i][0];
 								}
-							myQueryTemp = myQueryTemp + "SELECT \"" + results[0].values[i][0] + "\" AS \"table\",";
-							myQueryTemp = myQueryTemp + "COUNT(*) AS \"rows\",";
-							myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (name,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + results[0].values[i][0] + "\")) AS \"field\",";
-							myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (type,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + results[0].values[i][0] + "\")) AS \"field_type\",";
-							myQueryTemp = myQueryTemp + "(SELECT sql FROM sqlite_master WHERE tbl_name=\"" + results[0].values[i][0] + "\") as \"sql\"";
-							myQueryTemp = myQueryTemp + " FROM " + results[0].values[i][0];
+
+							// QUERY ORDER BY TABLE
+							myQueryTemp = myQueryTemp + " ORDER BY \"table\";"
+
+							// EXECUTING THE QUERY
+							SQLExecute(myQueryTemp);
 							}
-
-						// QUERY ORDER BY TABLE
-						myQueryTemp = myQueryTemp + " ORDER BY \"table\";"
-
-						// EXECUTING THE QUERY
-						SQLExecute(myQueryTemp);
+							catch(err)
+							{
+							}
 						}
 					// IF A EXPORTING PROCESS IS NOT RUNNING, EVERY SQL COMMAND WILL BE EXECUTED AS NORMAL
 					else if (EXPORT_STATUS==null)
 						{
-						// GETTING HOW MUCH TIME TOOK THE SQL COMMANDS TO BE EXECUTED
-						var dt = new Date().getTime() - initialTime;
-
-						// UPDATING THE LABEL
-						document.getElementById("SQLOnline_status").innerHTML = "SQL commands executed successfully in " + Math.floor(dt) + " ms."
-
-						// LOOPING THE RESULT AND CREATING A TABLE FOR EACH CASE
-						for (var i = 0; i < results.length; i++)
+						try
 							{
-							// DISPLAYING A TABLE WITH THE RESULT
-							document.getElementById("SQLOnline_output").appendChild(SQLDisplayTable(results[i].columns,results[i].values));
-							}
+							// GETTING HOW MUCH TIME TOOK THE SQL COMMANDS TO BE EXECUTED
+							var dt = new Date().getTime() - initialTime;
 
-						// CHECKING IF IT IS A MOBILE DEVICE
-						if(isAMobileDevice()==false)
-							{
-							editor.focus();
-							}
-						}
-						else
-						{
-						// ADDING RAW DATA TO THE SCRIPT, ACCORDING EACH STAGE OF THE EXPORTING PROCESS
-						for (var i = 0; i < results.length; i++)
-							{
-							EXPORT_STATUS_SCRIPT = EXPORT_STATUS_SCRIPT + SQLGetRAWData(results[i].columns,results[i].values);
-							}
+							// UPDATING THE LABEL
+							document.getElementById("SQLOnline_status").innerHTML = "SQL commands executed successfully in " + Math.floor(dt) + " ms."
 
-						// UPDATING THE EXPORTING PROCESS STATUS
-						EXPORT_STATUS = EXPORT_STATUS_STAGE_2_INSERTING_ROWS;
-
-						// CHECKING IF THERE IS A TABLE CREATED
-						if (EXPORT_STATUS_TABLES_PENDING.length>0)
-							{
-							EXPORT_STATUS_LATEST_TABLE = EXPORT_STATUS_TABLES_PENDING[0];
-
-							// REMOVING THE TABLE NAME FROM THE 'TABLES PENDING' ARRAY
-							EXPORT_STATUS_TABLES_PENDING.shift();
-
-							// EXECUTING THE QUERY TO GET ALL THE ROWS FROM THE FIRST TABLE
-							SQLExecute("SELECT * FROM " + EXPORT_STATUS_LATEST_TABLE);
-							}
-							else
-							{
-							// IF THERE ARE NO TABLES LEFT, THE SCRIPT IS DOWNLOADED
-							SQLExportScript(EXPORT_STATUS_SCRIPT);
-
-							// CLEARING VALUES
-							EXPORT_STATUS = null;
-							EXPORT_STATUS_TABLES_PENDING = [];
-							EXPORT_STATUS_LATEST_TABLE = "";
-							EXPORT_STATUS_SCRIPT = "";
+							// LOOPING THE RESULT AND CREATING A TABLE FOR EACH CASE
+							for (var i = 0; i < results.length; i++)
+								{
+								// DISPLAYING A TABLE WITH THE RESULT
+								document.getElementById("SQLOnline_output").appendChild(SQLDisplayTable(results[i].columns,results[i].values));
+								}
 
 							// CHECKING IF IT IS A MOBILE DEVICE
 							if(isAMobileDevice()==false)
 								{
 								editor.focus();
 								}
+							}
+							catch(err)
+							{
+							// CLEARING VALUES IF ANY ERROR
+							EXPORT_STATUS = null;
+							EXPORT_STATUS_TABLES_PENDING = [];
+							EXPORT_STATUS_LATEST_TABLE = "";
+							EXPORT_STATUS_SCRIPT = "";
+							}
+						}
+						else
+						{
+						try
+							{
+							// ADDING RAW DATA TO THE SCRIPT, ACCORDING EACH STAGE OF THE EXPORTING PROCESS
+							for (var i = 0; i < results.length; i++)
+								{
+								EXPORT_STATUS_SCRIPT = EXPORT_STATUS_SCRIPT + SQLGetRAWData(results[i].columns,results[i].values);
+								}
+
+							// UPDATING THE EXPORTING PROCESS STATUS
+							EXPORT_STATUS = EXPORT_STATUS_STAGE_2_INSERTING_ROWS;
+
+							// CHECKING IF THERE IS A TABLE CREATED
+							if (EXPORT_STATUS_TABLES_PENDING.length>0)
+								{
+								EXPORT_STATUS_LATEST_TABLE = EXPORT_STATUS_TABLES_PENDING[0];
+
+								// REMOVING THE TABLE NAME FROM THE 'TABLES PENDING' ARRAY
+								EXPORT_STATUS_TABLES_PENDING.shift();
+
+								// EXECUTING THE QUERY TO GET ALL THE ROWS FROM THE FIRST TABLE
+								SQLExecute("SELECT * FROM " + EXPORT_STATUS_LATEST_TABLE);
+								}
+								else
+								{
+								// IF THERE ARE NO TABLES LEFT, THE SCRIPT IS DOWNLOADED
+								SQLExportScript(EXPORT_STATUS_SCRIPT);
+
+								// CLEARING VALUES
+								EXPORT_STATUS = null;
+								EXPORT_STATUS_TABLES_PENDING = [];
+								EXPORT_STATUS_LATEST_TABLE = "";
+								EXPORT_STATUS_SCRIPT = "";
+
+								// CHECKING IF IT IS A MOBILE DEVICE
+								if(isAMobileDevice()==false)
+									{
+									editor.focus();
+									}
+								}
+							}
+							catch(err)
+							{
+							// CLEARING VALUES IF ANY ERROR
+							EXPORT_STATUS = null;
+							EXPORT_STATUS_TABLES_PENDING = [];
+							EXPORT_STATUS_LATEST_TABLE = "";
+							EXPORT_STATUS_SCRIPT = "";
 							}
 						}
 					}
