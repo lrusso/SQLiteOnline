@@ -1016,6 +1016,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 						{
 						if (!document.getElementsByClassName("SQLOnline_button_tables_selected")[0].contains(event.target))
 							{
+							document.getElementsByClassName("SQLOnline_tablelist")[0].classList.remove("SQLOnline_tablelist_show");
 							document.getElementsByClassName("SQLOnline_header")[0].classList.remove("SQLOnline_header_show");
 							document.getElementById("buttonTables").classList.remove("SQLOnline_button_tables_selected");
 							}
