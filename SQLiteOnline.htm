@@ -12,6 +12,13 @@
 		<style>
 			html,body{padding:0;margin:0;background:white}
 
+			.SQLOnline_header{position:fixed;left:0;top:0;bottom:0;width:250px;overflow-y:hidden;overflow-x:hidden;background-color:white;border-right:thin solid silver;transition:0.5s;-webkit-transition:0.5s;-moz-transition:0.5s;z-index:999}
+			.SQLOnline_header_right{position:fixed;left:251px;top:0;bottom:0;right:0;overflow-y:scroll;overflow-x:hidden;background-color:white}
+
+			.SQLOnline_database_container{float:left;width:250px;background-color:#F2F2F2;font-family:Arial;font-size:14px;font-weight:bold;text-align:center;height:40px;line-height:1.35;border-bottom:thin solid silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+			.SQLOnline_database_icon{display:inline-block;float:left;width:16px;height:20px;margin-right:8px;background-position:0px 1px;background-repeat:no-repeat;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwcFiEy39hdCwAAAO5JREFUOMvF0z9KQ0EQBvBfnmLhn8Z0prcIBnuxTCV4AHMDEW+QS3iCdPECVhrUO0SEpyCCmlbQiIXFSzOGVR6JgYADw+5+s/Mx880u/22VZL+KFprYQi2wCoZ4wQ0u0A3sh+UocI1dVJGFVwO7ijt3ZRUUsQ5xhlu8Br6OOvaxkuaWEczUfpYA9zMk52UtbGAvRGzEeS1i7yFiHz2c4+k3wQdO40Ifg0gURLUgbuIAy3PX4CjKnGbPOPw+LCaBbezEmCZp8In2pHeQT9FgsyR3PMbijz4e40JC0MFjlJhhKbzAGx5wiRMc42suv3EEKapB0PKs+V0AAAAASUVORK5CYII=")}
+			.SQLOnline_database_name{display:inline-block;padding-top:10px}
+
 			.SQLOnline_container{width:100%}
 			.SQLOnline_menubar{float:left;width:100%;height:40px;background-color:#F2F2F2;font-family:Arial;font-size:14px;font-weight:bold;line-height:14px;color:white;border-bottom:thin solid #D3D3D3}
 			.SQLOnline_holder{float:left;padding-top:3px;padding-bottom:3px;margin:0}
@@ -29,8 +36,9 @@
 			.SQLOnline_button_redo_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_button_execute_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwBBiABx0YhbgAAAIdJREFUOMu90iEKAnEUxOEPDUaxCrLFsIfwBgbxDt7DM1j2DgajzaIX8AraTDab8LfsgnXfQwemvfnBG4YfaZgJN3hgGQWcUFrvMMoACq6oM4CCFzYZQOc9xhlAwQ3T7ngQKLnCPAp4Yo1L5IUzZpES39j2Wec34I5F35KObfiASWTKNVb+pQ+KHjTRA0iZJgAAAABJRU5ErkJggg==");background-repeat:no-repeat;background-position:center}
 			.SQLOnline_button_execute_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
-			.SQLOnline_button_tables_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:27px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwFAS8PLUuRdAAAAChJREFUOMtjYBhowAil/5Orl4lSFzBRyyv/yeUzDXggjnphMHlh4AAA7Z4QA4a4SGAAAAAASUVORK5CYII=");background-repeat:no-repeat;background-position:center}
+			.SQLOnline_button_tables_enabled{display:none;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:27px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwFAS8PLUuRdAAAAChJREFUOMtjYBhowAil/5Orl4lSFzBRyyv/yeUzDXggjnphMHlh4AAA7Z4QA4a4SGAAAAAASUVORK5CYII=");background-repeat:no-repeat;background-position:center}
 			.SQLOnline_button_tables_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
+			.SQLOnline_button_tables_selected{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_button_export_enabled{display:block;font-family:Arial;font-size:15px;line-height:32px;height:32px;width:28px;background-color:#F2F2F2;border:thin solid #F2F2F2;margin-left:3px;color:silver;cursor:default;-webkit-user-select:none;-moz-user-select:none;user-select:none;background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAGlJREFUOI1jYKAQMOKR+0+MWiZKXTBqAI0MmMWAGYUMULFZxBjKzsDAcByqARkfg8oRBaQYGBieI2l+DhXDCWAKkYEVAwPDLyi2IqQemwEMDAwM6QwMDGnEWIjLAFwArp4FiwRJgOJ0AAApLx4H+OZ62AAAAABJRU5ErkJggg==");background-repeat:no-repeat;background-position:center}
 			.SQLOnline_button_export_enabled:hover{background-color:#E3E3E3;border:thin solid #D3D3D3}
 			.SQLOnline_body{float:left;width:100%;border-bottom:thin solid #D3D3D3}
@@ -38,7 +46,7 @@
 			.SQLOnline_results_title{float:left;background-color:white;border-right:thin solid #D3D3D3;border-top:thin solid #D3D3D3}
 			.SQLOnline_results_title_icon{float:left;width:20px;height:30px;padding-left:10px;background-position:center center;background-repeat:no-repeat;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwBEgctNHT0RAAAAClJREFUOMtjYKAQMELp/+TqZaLUBRQbwIDDC0TzmQY8EEe9MJi8MIQBAP5cEAN8bxoTAAAAAElFTkSuQmCC")}
 			.SQLOnline_results_title_value{float:left;height:30px;font-family:Arial;font-size:14px;line-height:2;padding-right:15px;-webkit-user-select:none;-moz-user-select:none;user-select:none}
-			.SQLOnline_results_wrapper{float:left;width:100%;min-height:50px;border-top:thin solid #D3D3D3;background-color:white;font-family:Arial;font-size:14px}
+			.SQLOnline_results_wrapper{float:left;width:100%;min-height:50px;border-top:thin solid #D3D3D3;background-color:white;font-family:Arial;font-size:14px;overflow-x:scroll}
 			.SQLOnline_results_status{float:left;width:95%;line-height:3;padding-left:10px}
 			.SQLOnline_table{font-family:Arial;font-size:13px;line-height:2.3;color:white;text-align:left;font-weight:bold;margin-left:10px;margin-right:10px}
 
@@ -59,6 +67,22 @@
 			.SQLOnline_splash{position:fixed;left:0;top:0;right:0;bottom:0;background-color:rgba(255,255,255,0.6);z-index:9998;display:block;border:0;padding:0;margin:0}
 			.SQLOnline_splash_container{position:fixed;width:31px;height:31px;left:0;right:0;top:0;bottom:0;margin:auto auto;border:0;z-index:9999;display:block;background-repeat:no-repeat;background-image:url("data:image/gif;base64,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")}
 
+			.SQLOnline_tablelist{float:left;width:250px}
+			.SQLOnline_tablelist_table{float:left;width:250px;font-family:Arial;font-size:14px;line-height:1;text-align:left;padding-top:12px;padding-bottom:13px;background-position:8px 12px;background-repeat:no-repeat;background-image:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4wwBEgctNHT0RAAAAClJREFUOMtjYKAQMELp/+TqZaLUBRQbwIDDC0TzmQY8EEe9MJi8MIQBAP5cEAN8bxoTAAAAAElFTkSuQmCC");-webkit-user-select:none;-moz-user-select:none;user-select:none}
+			.SQLOnline_tablelist_table:hover{background-color:#F2F2F2;cursor:pointer}
+			.SQLOnline_tablelist_table_name{padding-left:30px}
+
+			.SQLOnline_tablelist_nolist{float:left;width:240px;font-family:Arial;font-size:14px;color:gray;line-height:1;text-align:center;padding-top:12px;padding-bottom:13px;-webkit-user-select:none;-moz-user-select:none;user-select:none}
+
+			@media screen and (orientation:portrait)
+				{
+				.SQLOnline_header{left:-251px}
+				.SQLOnline_header_right{left:0px}
+				.SQLOnline_header_show{left:0;transition:0.5s;-webkit-transition:0.5s;-moz-transition:0.5s}
+				.SQLOnline_button_tables_enabled{display:block}
+				.SQLOnline_separator{float:left;border-left:thin solid #D3D3D3;margin-left:9px;height:45px;width:1px}
+				}
+
 			table{width:auto;border:thin solid silver;border-collapse:collapse;margin-bottom:10px;background-color:white;font-family:Arial;font-size:14px;color:black}
 			th,td{border:thin solid silver;padding-left:10px;padding-right:10px;line-height:2}
 			th{background-color:#F2F2F2}
@@ -70,40 +94,48 @@
 		</style>
 	</head>
 	<body>
-		<div class="SQLOnline_container">
-			<div class="SQLOnline_menubar">
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_new_enabled" id="buttonNew"></div>
+		<div class="SQLOnline_header">
+
+			<div class="SQLOnline_database_container"><div class="SQLOnline_database_name"><div class="SQLOnline_database_icon"></div>sqlite_master</div></div>
+			<div class="SQLOnline_tablelist"></div>
+			<div class="SQLOnline_tablelist_nolist">(no tables found)</div>
+
+		</div>
+		<div class="SQLOnline_header_right">
+			<div class="SQLOnline_container">
+				<div class="SQLOnline_menubar">
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_new_enabled" id="buttonNew"></div>
+					</div>
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_open_enabled" id="buttonOpen"></div>
+						<input type="file" class="SQLOnline_buttonHidden" id="fileOpener" onChange="documentOpen(document.getElementById('fileOpener').files[0]);">
+					</div>
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_save_enabled" id="buttonSave"></div>
+					</div>
+					<div class="SQLOnline_separator"></div>
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_undo_enabled" id="buttonUndo"></div>
+					</div>
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_redo_enabled" id="buttonRedo"></div>
+					</div>
+					<div class="SQLOnline_separator"></div>
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_execute_enabled" id="buttonExecute"></div>
+					</div>
+					<div class="SQLOnline_separator"></div>
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_export_enabled" id="buttonExport"></div>
+					</div>
+					<div class="SQLOnline_holder">
+						<div class="SQLOnline_button_tables_enabled" id="buttonTables"></div>
+					</div>
+					<div class="SQLOnline_separator"></div>
 				</div>
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_open_enabled" id="buttonOpen"></div>
-					<input type="file" class="SQLOnline_buttonHidden" id="fileOpener" onChange="documentOpen(document.getElementById('fileOpener').files[0]);">
-				</div>
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_save_enabled" id="buttonSave"></div>
-				</div>
-				<div class="SQLOnline_separator"></div>
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_undo_enabled" id="buttonUndo"></div>
-				</div>
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_redo_enabled" id="buttonRedo"></div>
-				</div>
-				<div class="SQLOnline_separator"></div>
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_execute_enabled" id="buttonExecute"></div>
-				</div>
-				<div class="SQLOnline_separator"></div>
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_tables_enabled" id="buttonTables"></div>
-				</div>
-				<div class="SQLOnline_holder">
-					<div class="SQLOnline_button_export_enabled" id="buttonExport"></div>
-				</div>
-				<div class="SQLOnline_separator"></div>
-			</div>
-			<div class="SQLOnline_body">
-				<textarea id="commands" readonly>DROP TABLE IF EXISTS employees;
+				<div class="SQLOnline_body">
+					<textarea id="commands" readonly>DROP TABLE IF EXISTS employees;
 
 CREATE TABLE employees( id          integer,  name    text,
                         designation text,     manager integer,
@@ -126,16 +158,17 @@ INSERT INTO employees VALUES (14, 'ROOSEVELT',  'CPA',         9, '1995-10-12', 
 
 SELECT designation, COUNT(*) AS nbr, (AVG(salary)) AS avg_salary FROM employees GROUP BY designation ORDER BY avg_salary DESC;
 SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
+				</div>
 			</div>
-		</div>
-		<div class="SQLOnline_results_container">
-			<div class="SQLOnline_results_title">
-				<div class="SQLOnline_results_title_icon"></div>
-				<div class="SQLOnline_results_title_value">Results</div>
-			</div>
-			<div class="SQLOnline_results_wrapper">
-				<span class="SQLOnline_results_status" id="SQLOnline_status"></span>
-				<div id="SQLOnline_output"></div>
+			<div class="SQLOnline_results_container">
+				<div class="SQLOnline_results_title">
+					<div class="SQLOnline_results_title_icon"></div>
+					<div class="SQLOnline_results_title_value">Results</div>
+				</div>
+				<div class="SQLOnline_results_wrapper">
+					<span class="SQLOnline_results_status" id="SQLOnline_status"></span>
+					<div id="SQLOnline_output"></div>
+				</div>
 			</div>
 		</div>
 
@@ -433,10 +466,29 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 				}
 
+			function hideTableList()
+				{
+				document.getElementsByClassName("SQLOnline_header")[0].classList.remove("SQLOnline_header_show");
+				document.getElementById("buttonTables").classList.remove("SQLOnline_button_tables_selected");
+				}
+
+			function getTableInfo(myTableName)
+				{
+				var myQueryTemp = "";
+				myQueryTemp = myQueryTemp + "SELECT * FROM " + myTableName + ";";
+				myQueryTemp = myQueryTemp + "SELECT \"" + myTableName + "\" AS \"table\",";
+				myQueryTemp = myQueryTemp + "COUNT(*) AS \"rows\",";
+				myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (name,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + myTableName + "\")) AS \"field\",";
+				myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (type,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + myTableName + "\")) AS \"field_type\",";
+				myQueryTemp = myQueryTemp + "(SELECT sql FROM sqlite_master WHERE tbl_name=\"" + myTableName + "\") as \"sql\"";
+				myQueryTemp = myQueryTemp + " FROM " + myTableName;
+				return myQueryTemp;
+				}
+
 			function SQLExecute(systemQuery)
 				{
 				// UPDATING LABELS IF THERE IS NO EXPORTING PROCESS RUNNING
-				if (EXPORT_STATUS==null)
+				if (EXPORT_STATUS==null && QUERY_ALL_TABLES==false)
 					{
 					document.getElementById("SQLOnline_status").innerHTML = "";
 					document.getElementById("SQLOnline_output").innerHTML = "";
@@ -462,26 +514,29 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 						try
 							{
+							// CLEARING THE TABLE LIST
+							document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML = "";
+
+							// SHOWING THE 'NO TABLES FOUND' LEYEND
+							document.getElementsByClassName("SQLOnline_tablelist_nolist")[0].style.display = "block";
+
 							// LOOPING EVERY TABLE FIELD NAME
 							for (var i = 0; i < results[0].values.length; i++)
 								{
-								if (myQueryTemp!="")
-									{
-									myQueryTemp = myQueryTemp + "\nUNION ALL\n\n";
-									}
-								myQueryTemp = myQueryTemp + "SELECT \"" + results[0].values[i][0] + "\" AS \"table\",";
-								myQueryTemp = myQueryTemp + "COUNT(*) AS \"rows\",";
-								myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (name,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + results[0].values[i][0] + "\")) AS \"field\",";
-								myQueryTemp = myQueryTemp + "(SELECT GROUP_CONCAT (type,\" <br/>\") FROM PRAGMA_TABLE_INFO(\"" + results[0].values[i][0] + "\")) AS \"field_type\",";
-								myQueryTemp = myQueryTemp + "(SELECT sql FROM sqlite_master WHERE tbl_name=\"" + results[0].values[i][0] + "\") as \"sql\"";
-								myQueryTemp = myQueryTemp + " FROM " + results[0].values[i][0];
+								// GETTING THE TABLE NAME
+								var myTableName = results[0].values[i][0];
+
+								// GENERATING THE NEW TABLE LIST ITEM
+								var finalString = "<div class=\"SQLOnline_tablelist_table\" onclick=\"SQLExecute(getTableInfo('" + myTableName + "'));hideTableList();\">";
+								finalString = finalString + "<div class=\"SQLOnline_tablelist_table_name\">" + myTableName + "</div>";
+								finalString = finalString + "</div>";
+
+								// ADD THE NEW TABLE TO THE TABLE LIST
+								document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML = document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML + finalString;
+
+								// HIDING THE 'NO TABLES FOUND' LEYEND
+								document.getElementsByClassName("SQLOnline_tablelist_nolist")[0].style.display = "none";
 								}
-
-							// QUERY ORDER BY TABLE
-							myQueryTemp = myQueryTemp + " ORDER BY \"table\";"
-
-							// EXECUTING THE QUERY
-							SQLExecute(myQueryTemp);
 							}
 							catch(err)
 							{
@@ -515,6 +570,10 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 								{
 								editor.focus();
 								}
+
+							// UPDATING THE TABLE LIST AFTER EVERY QUERY
+							QUERY_ALL_TABLES=true;
+							SQLExecute("SELECT tbl_name AS 'table' FROM sqlite_master  ORDER BY tbl_name;")
 							}
 							catch(err)
 							{
@@ -911,7 +970,19 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				document.getElementById("buttonUndo").addEventListener("click",function(event){documentUndo()});
 				document.getElementById("buttonRedo").addEventListener("click",function(event){documentRedo()});
 				document.getElementById("buttonExecute").addEventListener("click",function(event){QUERY_ALL_TABLES=false;SQLExecute(null)});
-				document.getElementById("buttonTables").addEventListener("click",function(event){QUERY_ALL_TABLES=true;SQLExecute("SELECT tbl_name AS 'table', sql FROM sqlite_master;")});
+				document.getElementById("buttonTables").addEventListener("click",function(event)
+					{
+					if (document.getElementsByClassName("SQLOnline_header")[0].offsetLeft<0)
+						{
+						document.getElementsByClassName("SQLOnline_header")[0].classList.add("SQLOnline_header_show");
+						document.getElementById("buttonTables").classList.add("SQLOnline_button_tables_selected");
+						}
+						else
+						{
+						document.getElementsByClassName("SQLOnline_header")[0].classList.remove("SQLOnline_header_show");
+						document.getElementById("buttonTables").classList.remove("SQLOnline_button_tables_selected");
+						}
+					});
 				document.getElementById("buttonExport").addEventListener("click",function(event){QUERY_ALL_TABLES=false;SQLExport()});
 				document.getElementsByClassName("SQLOnline_excel_headersize_select")[0].addEventListener("change",function(event){updateExcelPreview()});
 				document.getElementsByClassName("SQLOnline_splash")[0].style.display = "none";
@@ -927,6 +998,25 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					editor.focus();
 					}
 					catch(err)
+					{
+					}
+				}
+
+			window.onclick = function(event)
+				{
+				try
+					{
+					// CODE TO HIDE THE TABLE LIST (IN MOBILE DEVICES) WHEN THE CLICK HAPPENS SOMEWHERE ELSE
+					if (!document.getElementsByClassName("SQLOnline_header")[0].contains(event.target))
+						{
+						if (!document.getElementsByClassName("SQLOnline_button_tables_selected")[0].contains(event.target))
+							{
+							document.getElementsByClassName("SQLOnline_header")[0].classList.remove("SQLOnline_header_show");
+							document.getElementById("buttonTables").classList.remove("SQLOnline_button_tables_selected");
+							}
+						}
+					}
+				catch(err)
 					{
 					}
 				}
