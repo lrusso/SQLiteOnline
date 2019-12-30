@@ -12,6 +12,6 @@ https://lrusso.github.io/SQLiteOnline/SQLiteOnline.htm
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/SQLiteOnline/master/SQLiteOnline2.png)
 
-## Core files:
+## Based on the work of:
 
 https://github.com/kripken/sql.js
