@@ -11,3 +11,7 @@ https://lrusso.github.io/SQLiteOnline/SQLiteOnline.htm
 ## QUICK GUIDE: Select an Excel file and import all the rows from the every table
 
 ![alt screenshot](https://raw.githubusercontent.com/lrusso/SQLiteOnline/master/SQLiteOnline2.png)
+
+## Core files:
+
+https://github.com/kripken/sql.js
