@@ -286,11 +286,182 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 			var ExcelFirstRow = 0;
 			var ExcelFinalResult = "";
 
+			// SETTING THE INITIAL TIME FOR THE QUERY
+			var initialTime = 0;
+
 			// SETTING THE WORKER
 			var worker = new Worker("SQLiteOnline.js");
 
 			// SETTING THE FUNCTION THAT WILL BE EXECUTED FOR ANY SQLERROR
 			worker.onerror = SQLError;
+
+			// SETTING WHAT WILL HAPPEN WITH THE RESULT OF THE SQL COMMANDS
+			worker.onmessage = function (event)
+				{
+				// CHECKING IF A MESSAGE WAS RECEIVED SAYING THAT THE DATABASE IS READY TO BE USED
+				if (event.data.ready)
+					{
+					// HIDING THE SPLASH
+					document.getElementsByClassName("SQLOnline_splash")[0].style.display = "none";
+					document.getElementsByClassName("SQLOnline_splash_container")[0].style.display = "none";
+
+					try
+						{
+						// ENABLING THE EDITOR
+						editor.setOption("readOnly",false);
+
+						// SETTING THE CURSOR AT THE BEGINNING OF THE DOCUMENT
+						editor.setCursor(0,0);
+
+						// SHOWING THE CURSOR
+						editor.setOption("cursorHeight", 1);
+
+						// FOCUSING THE EDITOR
+						editor.focus();
+						}
+						catch(err)
+						{
+						}
+					}
+					else
+					{
+					// GETTING THE RESULT
+					var results = event.data.results;
+
+					// CHECKING IF A QUERY ALL TABLES PROCESS IS ENABLED
+					if (QUERY_ALL_TABLES==true)
+						{
+						// RETURN TO THE DEFAULT STATE
+						QUERY_ALL_TABLES = false;
+
+						// CREATING VARIABLE THAT WILL CONTAIN THE FINAL QUERY FOR ALL THE TABLES
+						var myQueryTemp = "";
+
+						try
+							{
+							// CLEARING THE TABLE LIST
+							document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML = "";
+
+							// SHOWING THE 'NO TABLES FOUND' LEYEND
+							document.getElementsByClassName("SQLOnline_tablelist_nolist")[0].style.display = "block";
+
+							// LOOPING EVERY TABLE FIELD NAME
+							for (var i = 0; i < results[0].values.length; i++)
+								{
+								// GETTING THE TABLE NAME
+								var myTableName = results[0].values[i][0];
+
+								// GENERATING THE NEW TABLE LIST ITEM
+								var finalString = "<div class=\"SQLOnline_tablelist_table\" onclick=\"SQLExecute(getTableInfo('" + myTableName + "'));hideTableList();\">";
+								finalString = finalString + "<div class=\"SQLOnline_tablelist_table_name\">" + myTableName + "</div>";
+								finalString = finalString + "</div>";
+
+								// ADD THE NEW TABLE TO THE TABLE LIST
+								document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML = document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML + finalString;
+
+								// HIDING THE 'NO TABLES FOUND' LEYEND
+								document.getElementsByClassName("SQLOnline_tablelist_nolist")[0].style.display = "none";
+								}
+							}
+							catch(err)
+							{
+							// CHECKING IF IT IS A MOBILE DEVICE
+							if(isAMobileDevice()==false)
+								{
+								editor.focus();
+								}
+							}
+						}
+					// IF A EXPORTING PROCESS IS NOT RUNNING, EVERY SQL COMMAND WILL BE EXECUTED AS NORMAL
+					else if (EXPORT_STATUS==null)
+						{
+						try
+							{
+							// GETTING HOW MUCH TIME TOOK THE SQL COMMANDS TO BE EXECUTED
+							var dt = new Date().getTime() - initialTime;
+
+							// UPDATING THE LABEL
+							document.getElementById("SQLOnline_status").innerHTML = "SQL commands executed successfully in " + Math.floor(dt) + " ms."
+
+							// LOOPING THE RESULT AND CREATING A TABLE FOR EACH CASE
+							for (var i = 0; i < results.length; i++)
+								{
+								// DISPLAYING A TABLE WITH THE RESULT
+								document.getElementById("SQLOnline_output").appendChild(SQLDisplayTable(results[i].columns,results[i].values));
+								}
+
+							// CHECKING IF IT IS A MOBILE DEVICE
+							if(isAMobileDevice()==false)
+								{
+								editor.focus();
+								}
+
+							// UPDATING THE TABLE LIST AFTER EVERY QUERY
+							QUERY_ALL_TABLES=true;
+							SQLExecute("SELECT tbl_name AS 'table' FROM sqlite_master  ORDER BY tbl_name;")
+							}
+							catch(err)
+							{
+							// CLEARING VALUES IF ANY ERROR
+							EXPORT_STATUS = null;
+							EXPORT_STATUS_TABLES_PENDING = [];
+							EXPORT_STATUS_LATEST_TABLE = "";
+							EXPORT_STATUS_SCRIPT = "";
+							}
+						}
+						else
+						{
+						try
+							{
+							// ADDING RAW DATA TO THE SCRIPT, ACCORDING EACH STAGE OF THE EXPORTING PROCESS
+							for (var i = 0; i < results.length; i++)
+								{
+								EXPORT_STATUS_SCRIPT = EXPORT_STATUS_SCRIPT + SQLGetRAWData(results[i].columns,results[i].values);
+								}
+
+							// UPDATING THE EXPORTING PROCESS STATUS
+							EXPORT_STATUS = EXPORT_STATUS_STAGE_2_INSERTING_ROWS;
+
+							// CHECKING IF THERE IS A TABLE CREATED
+							if (EXPORT_STATUS_TABLES_PENDING.length>0)
+								{
+								EXPORT_STATUS_LATEST_TABLE = EXPORT_STATUS_TABLES_PENDING[0];
+
+								// REMOVING THE TABLE NAME FROM THE 'TABLES PENDING' ARRAY
+								EXPORT_STATUS_TABLES_PENDING.shift();
+
+								// EXECUTING THE QUERY TO GET ALL THE ROWS FROM THE FIRST TABLE
+								SQLExecute("SELECT * FROM " + EXPORT_STATUS_LATEST_TABLE);
+								}
+								else
+								{
+								// IF THERE ARE NO TABLES LEFT, THE SCRIPT IS DOWNLOADED
+								SQLExportScript(EXPORT_STATUS_SCRIPT);
+
+								// CLEARING VALUES
+								EXPORT_STATUS = null;
+								EXPORT_STATUS_TABLES_PENDING = [];
+								EXPORT_STATUS_LATEST_TABLE = "";
+								EXPORT_STATUS_SCRIPT = "";
+
+								// CHECKING IF IT IS A MOBILE DEVICE
+								if(isAMobileDevice()==false)
+									{
+									editor.focus();
+									}
+								}
+							}
+							catch(err)
+							{
+							// CLEARING VALUES IF ANY ERROR
+							EXPORT_STATUS = null;
+							EXPORT_STATUS_TABLES_PENDING = [];
+							EXPORT_STATUS_LATEST_TABLE = "";
+							EXPORT_STATUS_SCRIPT = "";
+							}
+						}
+					}
+				}
 
 			// OPENING A TEMPORARY DATABASE
 			worker.postMessage({action:"open"});
@@ -520,147 +691,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					}
 
 				// GETTING THE CURRENT TIME IN MS
-				var initialTime = new Date().getTime();
-
-				// SETTING WHAT WILL HAPPEN WITH THE RESULT OF THE SQL COMMANDS
-				worker.onmessage = function (event)
-					{
-					// GETTING THE RESULT
-					var results = event.data.results;
-
-					// CHECKING IF A QUERY ALL TABLES PROCESS IS ENABLED
-					if (QUERY_ALL_TABLES==true)
-						{
-						// RETURN TO THE DEFAULT STATE
-						QUERY_ALL_TABLES = false;
-
-						// CREATING VARIABLE THAT WILL CONTAIN THE FINAL QUERY FOR ALL THE TABLES
-						var myQueryTemp = "";
-
-						try
-							{
-							// CLEARING THE TABLE LIST
-							document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML = "";
-
-							// SHOWING THE 'NO TABLES FOUND' LEYEND
-							document.getElementsByClassName("SQLOnline_tablelist_nolist")[0].style.display = "block";
-
-							// LOOPING EVERY TABLE FIELD NAME
-							for (var i = 0; i < results[0].values.length; i++)
-								{
-								// GETTING THE TABLE NAME
-								var myTableName = results[0].values[i][0];
-
-								// GENERATING THE NEW TABLE LIST ITEM
-								var finalString = "<div class=\"SQLOnline_tablelist_table\" onclick=\"SQLExecute(getTableInfo('" + myTableName + "'));hideTableList();\">";
-								finalString = finalString + "<div class=\"SQLOnline_tablelist_table_name\">" + myTableName + "</div>";
-								finalString = finalString + "</div>";
-
-								// ADD THE NEW TABLE TO THE TABLE LIST
-								document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML = document.getElementsByClassName("SQLOnline_tablelist")[0].innerHTML + finalString;
-
-								// HIDING THE 'NO TABLES FOUND' LEYEND
-								document.getElementsByClassName("SQLOnline_tablelist_nolist")[0].style.display = "none";
-								}
-							}
-							catch(err)
-							{
-							// CHECKING IF IT IS A MOBILE DEVICE
-							if(isAMobileDevice()==false)
-								{
-								editor.focus();
-								}
-							}
-						}
-					// IF A EXPORTING PROCESS IS NOT RUNNING, EVERY SQL COMMAND WILL BE EXECUTED AS NORMAL
-					else if (EXPORT_STATUS==null)
-						{
-						try
-							{
-							// GETTING HOW MUCH TIME TOOK THE SQL COMMANDS TO BE EXECUTED
-							var dt = new Date().getTime() - initialTime;
-
-							// UPDATING THE LABEL
-							document.getElementById("SQLOnline_status").innerHTML = "SQL commands executed successfully in " + Math.floor(dt) + " ms."
-
-							// LOOPING THE RESULT AND CREATING A TABLE FOR EACH CASE
-							for (var i = 0; i < results.length; i++)
-								{
-								// DISPLAYING A TABLE WITH THE RESULT
-								document.getElementById("SQLOnline_output").appendChild(SQLDisplayTable(results[i].columns,results[i].values));
-								}
-
-							// CHECKING IF IT IS A MOBILE DEVICE
-							if(isAMobileDevice()==false)
-								{
-								editor.focus();
-								}
-
-							// UPDATING THE TABLE LIST AFTER EVERY QUERY
-							QUERY_ALL_TABLES=true;
-							SQLExecute("SELECT tbl_name AS 'table' FROM sqlite_master  ORDER BY tbl_name;")
-							}
-							catch(err)
-							{
-							// CLEARING VALUES IF ANY ERROR
-							EXPORT_STATUS = null;
-							EXPORT_STATUS_TABLES_PENDING = [];
-							EXPORT_STATUS_LATEST_TABLE = "";
-							EXPORT_STATUS_SCRIPT = "";
-							}
-						}
-						else
-						{
-						try
-							{
-							// ADDING RAW DATA TO THE SCRIPT, ACCORDING EACH STAGE OF THE EXPORTING PROCESS
-							for (var i = 0; i < results.length; i++)
-								{
-								EXPORT_STATUS_SCRIPT = EXPORT_STATUS_SCRIPT + SQLGetRAWData(results[i].columns,results[i].values);
-								}
-
-							// UPDATING THE EXPORTING PROCESS STATUS
-							EXPORT_STATUS = EXPORT_STATUS_STAGE_2_INSERTING_ROWS;
-
-							// CHECKING IF THERE IS A TABLE CREATED
-							if (EXPORT_STATUS_TABLES_PENDING.length>0)
-								{
-								EXPORT_STATUS_LATEST_TABLE = EXPORT_STATUS_TABLES_PENDING[0];
-
-								// REMOVING THE TABLE NAME FROM THE 'TABLES PENDING' ARRAY
-								EXPORT_STATUS_TABLES_PENDING.shift();
-
-								// EXECUTING THE QUERY TO GET ALL THE ROWS FROM THE FIRST TABLE
-								SQLExecute("SELECT * FROM " + EXPORT_STATUS_LATEST_TABLE);
-								}
-								else
-								{
-								// IF THERE ARE NO TABLES LEFT, THE SCRIPT IS DOWNLOADED
-								SQLExportScript(EXPORT_STATUS_SCRIPT);
-
-								// CLEARING VALUES
-								EXPORT_STATUS = null;
-								EXPORT_STATUS_TABLES_PENDING = [];
-								EXPORT_STATUS_LATEST_TABLE = "";
-								EXPORT_STATUS_SCRIPT = "";
-
-								// CHECKING IF IT IS A MOBILE DEVICE
-								if(isAMobileDevice()==false)
-									{
-									editor.focus();
-									}
-								}
-							}
-							catch(err)
-							{
-							// CLEARING VALUES IF ANY ERROR
-							EXPORT_STATUS = null;
-							EXPORT_STATUS_TABLES_PENDING = [];
-							EXPORT_STATUS_LATEST_TABLE = "";
-							EXPORT_STATUS_SCRIPT = "";
-							}
-						}
-					}
+				initialTime = new Date().getTime();
 
 				// CHECKING IF IT IS A SYSTEM QUERY OR A END USER QUERY
 				if (systemQuery==null)
@@ -976,7 +1007,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				lineNumbers:true,
 				matchBrackets:true,
 				autofocus:false,
-				readOnly:true
+				readOnly:true,
+				cursorHeight: 0,
 				});
 
 			var editorDirty = false;
@@ -1012,21 +1044,7 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					});
 				document.getElementById("buttonExport").addEventListener("click",function(event){QUERY_ALL_TABLES=false;SQLExport()});
 				document.getElementsByClassName("SQLOnline_excel_headersize_select")[0].addEventListener("change",function(event){updateExcelPreview()});
-				document.getElementsByClassName("SQLOnline_splash")[0].style.display = "none";
-				document.getElementsByClassName("SQLOnline_splash_container")[0].style.display = "none";
 				document.getElementsByClassName("SQLOnline_excel_submit_button")[0].addEventListener("click",function(event){insertSpreadsheetAsSQL()});
-
-				try
-					{
-					// ENABLING THE EDITOR
-					editor.setOption("readOnly",false);
-
-					// FOCUSING THE EDITOR
-					editor.focus();
-					}
-					catch(err)
-					{
-					}
 				}
 
 			window.onclick = function(event)
