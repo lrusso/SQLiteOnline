@@ -380,9 +380,8 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 
 						try
 							{
-							// UNLOCKING THE EDITOR AND SHOWING THE POINTER
-							editor.setOptions({readOnly: false, highlightGutterLine: true});
-							editor.renderer.$cursorLayer.element.style.display = "block";
+							// ENABLING THE EDITOR
+							editor.setOption("readOnly",false);
 
 							// FOCUSING THE EDITOR
 							editor.focus();
@@ -614,6 +613,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 					// IF THE DOCUMENT IS DIRTY, A DISCARD CHANGES QUESTION WILL SHOW UP
 					if (editorDirty==true)
 						{
+						// DISABLING THE EDITOR
+						editor.setOption("readOnly",true);
+
 						// SHOWING A DIALOG IN ORDER TO CONFIRM IF THE USER WANTS TO LOSE ANY UNSAVED CHANGES
 						confirmCustom("MESSAGE","Lose any unsaved changes?","Yes","No", documentNewExecute);
 						}
@@ -632,6 +634,9 @@ SELECT name, hired_on FROM employees ORDER BY hired_on;</textarea>
 				{
 				try
 					{
+					// ENABLING THE EDITOR
+					editor.setOption("readOnly",false);
+
 					// CLEARING THE EDITOR CONTENT
 					editor.setValue("");
 
